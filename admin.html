@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="KajKhun administrator dashboard">
+  <title>KajKhun Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .admin-container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .admin-section {
+      margin: 25px 0;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: #fff;
+      color: #222;
+    }
+
+    .admin-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+
+    .admin-table th,
+    .admin-table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .admin-table th {
+      background: #f1f5f9;
+    }
+
+    .admin-button {
+      padding: 9px 15px;
+      margin: 5px 3px 5px 0;
+      border: 0;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .admin-status {
+      overflow-wrap: anywhere;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>KajKhun Admin Panel</h1>
+    <p>Manage profiles and profile reports</p>
+    <a href="index.html">Back to Main Website</a>
+  </header>
+
+  <main class="admin-container">
+    <section class="admin-section">
+      <h2>Admin Status</h2>
+      <p id="adminStatus" class="admin-status">
+        Checking administrator access...
+      </p>
+    </section>
+
+    <section class="admin-section" id="profilesSection">
+      <h2>Manage Profiles</h2>
+      <p id="profilesStatus" class="admin-status">
+        Profiles will appear here after admin verification.
+      </p>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Profession</th>
+              <th>Location</th>
+              <th>Public</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="profilesBody">
+            <tr>
+              <td colspan="5">Waiting for admin verification...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button
+        class="admin-button"
+        id="refreshProfiles"
+        type="button"
+      >
+        Refresh Profiles
+      </button>
+    </section>
+
+    <section class="admin-section" id="reportsSection">
+      <h2>Manage Profile Reports</h2>
+      <p id="reportsStatus" class="admin-status">
+        Reports will appear here after admin verification.
+      </p>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Report ID</th>
+              <th>Reported Profile</th>
+              <th>Reason</th>
+              <th>Details</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="reportsBody">
+            <tr>
+              <td colspan="6">Waiting for admin verification...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button
+        class="admin-button"
+        id="refreshReports"
+        type="button"
+      >
+        Refresh Reports
+      </button>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

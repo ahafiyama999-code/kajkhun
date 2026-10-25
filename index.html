@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="KajKhun-এ আপনার প্রয়োজনীয় পেশাজীবী, কর্মী ও ব্যবসা খুঁজুন।">
+  <title>KajKhun — আপনার প্রয়োজনীয় মানুষ খুঁজুন</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      font-family: Arial, sans-serif;
+      color: #172033;
+      background: #f5f7fb;
+    }
+    body { margin: 0; }
+    header {
+      background: #103b35;
+      color: white;
+      padding: 20px max(20px, calc((100% - 1100px)/2));
+    }
+    header h1 { margin: 0 0 6px; }
+    nav { display: flex; flex-wrap: wrap; gap: 18px; margin: 18px 0; }
+    nav a { color: white; text-decoration: none; }
+    button, .button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 16px;
+      background: #087f5b;
+      color: white;
+      font-size: 15px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    button:disabled { opacity: .6; cursor: wait; }
+    input, textarea, select {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      margin: 7px 0 16px;
+      border: 1px solid #ccd4df;
+      border-radius: 8px;
+      font: inherit;
+      background: white;
+    }
+    label { font-weight: 600; }
+    main { max-width: 1100px; margin: auto; padding: 20px; }
+    section {
+      background: white;
+      margin: 22px 0;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 3px 15px #1020300b;
+    }
+    .hero { background: #e2f4ec; padding: 40px 24px; }
+    .hero h2 { font-size: clamp(28px, 5vw, 44px); margin-top: 0; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .form-grid > div { min-width: 0; }
+    .profile-card { border: 1px solid #dce3e8; border-radius: 10px; padding: 16px; margin: 12px 0; }
+    .muted { color: #64748b; }
+    footer { padding: 25px; text-align: center; background: #103b35; color: white; }
+    dialog {
+      width: min(420px, calc(100% - 32px));
+      padding: 24px;
+      border: 0;
+      border-radius: 14px;
+      box-sizing: border-box;
+    }
+    dialog::backdrop { background: #071b18a8; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>KajKhun</h1>
+    <p>আপনার কাজের বিশ্বস্ত ঠিকানা</p>
+    <nav aria-label="প্রধান নেভিগেশন">
+      <a href="#home">হোম</a>
+      <a href="#categories">পেশা ও সেবা</a>
+      <a href="#people">মানুষ খুঁজুন</a>
+      <a href="#myProfile">আমার প্রোফাইল</a>
+      <a href="#contact">যোগাযোগ</a>
+    </nav>
+    <div id="authButtons">
+      <button id="signinBtn" type="button">Sign In</button>
+      <button id="signoutBtn" type="button" hidden>Sign Out</button>
+    </div>
+    <p id="authStatus" aria-live="polite">আপনার প্রয়োজনীয় মানুষ খুঁজুন।</p>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <h2>আপনার প্রয়োজনীয় মানুষ খুঁজুন</h2>
+      <p>পেশাজীবী, দক্ষ কর্মী, সেবাদাতা ও ব্যবসা খুঁজুন এক জায়গায়।</p>
+      <a class="button" href="#people">মানুষ খুঁজুন</a>
+      <a class="button" href="#myProfile">প্রোফাইল তৈরি করুন</a>
+    </section>
+
+<!-- KajKhun Advertisement Area -->
+<section id="advertisement" class="ad-section">
+  <div class="ad-label">Advertisement</div>
+
+  <div class="ad-box">
+    <p>Your Advertisement Here</p>
+    <small>Advertise your business on KajKhun</small>
+  </div>
+</section>
+
+    <section id="categories">
+      <h2>পেশা ও সেবা</h2>
+      <p>আপনার প্রয়োজন অনুযায়ী নাম, পেশা অথবা এলাকা দিয়ে খুঁজুন।</p>
+      <div class="form-grid">
+        <div><strong>শিক্ষা</strong><p class="muted">শিক্ষক, টিউটর ও প্রশিক্ষক</p></div>
+        <div><strong>প্রযুক্তি</strong><p class="muted">ডেভেলপার ও কম্পিউটার সেবা</p></div>
+        <div><strong>নির্মাণ</strong><p class="muted">ইলেকট্রিশিয়ান ও মিস্ত্রি</p></div>
+        <div><strong>ব্যবসা</strong><p class="muted">দোকান, প্রতিষ্ঠান ও সেবাদাতা</p></div>
+      </div>
+    </section>
+
+    <section id="people">
+      <h2>পেশাজীবী ও ব্যবসা খুঁজুন</h2>
+      <form id="searchForm">
+        <label for="searchInput">নাম, পেশা বা এলাকা</label>
+        <input id="searchInput" type="search" placeholder="যেমন: শিক্ষক, ঢাকা, ইলেকট্রিশিয়ান">
+        <button id="searchBtn" type="submit">Search</button>
+      </form>
+      <div id="searchResults" aria-live="polite">
+        <p class="muted">সার্চের ফলাফল এখানে দেখা যাবে।</p>
+      </div>
+    </section>
+
+    <section id="myProfile">
+      <h2>আমার প্রোফাইল</h2>
+      <p class="muted">নিজের পেশা বা ব্যবসার পরিচিতি তৈরি করুন। প্রোফাইল সংরক্ষণ করতে সাইন ইন করুন।</p>
+      <form id="profileForm">
+        <div class="form-grid">
+          <div>
+            <label for="profileName">নাম</label>
+            <input id="profileName" name="full_name" maxlength="100" placeholder="আপনার নাম">
+          </div>
+          <div>
+            <label for="profileProfession">পেশা বা ব্যবসা</label>
+            <input id="profileProfession" name="profession" maxlength="100" placeholder="আপনার পেশা">
+          </div>
+          <div>
+            <label for="profileLocation">এলাকা</label>
+            <input id="profileLocation" name="location" maxlength="150" placeholder="শহর বা এলাকা">
+          </div>
+        </div>
+        <label for="profileBio">নিজের সম্পর্কে</label>
+        <textarea id="profileBio" name="bio" rows="4" maxlength="2000" placeholder="আপনার অভিজ্ঞতা ও সেবার বিবরণ"></textarea>
+        <label>
+          <input id="profileIsPublic" name="is_public" type="checkbox" checked style="display:inline;width:auto;margin-right:8px">
+          আমার প্রোফাইল পাবলিকভাবে দেখান
+        </label>
+        <p><button id="saveProfileBtn" type="submit">প্রোফাইল সংরক্ষণ করুন</button></p>
+        <p id="profileStatus" aria-live="polite"></p>
+      </form>
+      <p class="muted">নোট: এই সংস্করণে ছবি আপলোডের ইনপুট রাখা হয়নি।</p>
+    </section>
+
+    <section id="contact">
+      <h2>যোগাযোগের তথ্য</h2>
+      <p>পাবলিক প্রোফাইলের যোগাযোগের তথ্য সুরক্ষিতভাবে দেখানোর জন্য লগইন, ডেটাবেস এবং অনুমতির নিয়ম সঠিকভাবে সেট করতে হবে।</p>
+      <div id="contactResults">
+        <p class="muted">প্রোফাইলের যোগাযোগের তথ্য এখানে দেখানো হবে, যদি অনুমতি থাকে।</p>
+      </div>
+    </section>
+
+    <section id="report">
+      <h2>প্রোফাইল সম্পর্কে অভিযোগ</h2>
+      <p>কোনো প্রোফাইলে সমস্যা দেখলে সেটির বিরুদ্ধে অভিযোগ জানানোর ব্যবস্থা ব্যবহার করুন।</p>
+      <form id="reportForm">
+        <label for="reportProfileId">যে প্রোফাইল সম্পর্কে অভিযোগ</label>
+        <input id="reportProfileId" name="reported_profile_id" placeholder="প্রোফাইল ID" required>
+        <label for="reportReason">অভিযোগের কারণ</label>
+        <select id="reportReason" name="reason" required>
+          <option value="">কারণ নির্বাচন করুন</option>
+          <option value="False information">ভুল তথ্য</option>
+          <option value="Spam">স্প্যাম</option>
+          <option value="Inappropriate content">অনুপযুক্ত বিষয়বস্তু</option>
+          <option value="Other">অন্যান্য</option>
+        </select>
+        <label for="reportDetails">বিস্তারিত (ঐচ্ছিক)</label>
+        <textarea id="reportDetails" name="details" rows="3" maxlength="2000"></textarea>
+        <button id="submitReportBtn" type="submit">অভিযোগ জমা দিন</button>
+        <p id="reportStatus" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>© KajKhun — আপনার প্রয়োজনীয় মানুষ খুঁজুন</p>
+    <p>পেশাজীবী, কর্মী ও ব্যবসা খুঁজুন এক জায়গায়।</p>
+    <a href="admin.html" style="color:white">Admin Panel</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>
