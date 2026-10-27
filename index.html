@@ -1,6 +1,12 @@
 
 <!DOCTYPE html>
 <html lang="bn">
+  
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css"
+>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -71,6 +77,7 @@
     dialog::backdrop { background: #071b18a8; }
     [hidden] { display: none !important; }
   </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.10.5/build/css/intlTelInput.css">
 </head>
 <body>
   <header>
@@ -147,9 +154,60 @@
           <div>
             <label for="profileLocation">এলাকা</label>
             <input id="profileLocation" name="location" maxlength="150" placeholder="শহর বা এলাকা">
+            
+<div>
+  <label for="profileDivision">বিভাগ / স্টেট / প্রদেশ</label>
+  <input id="profileDivision" name="division" maxlength="100"
+         placeholder="বিভাগ বা প্রদেশের নাম">
+</div>
+
+<div>
+  <label for="profileDistrict">জেলা / শহর</label>
+  <input id="profileDistrict" name="district" maxlength="100"
+         placeholder="জেলা বা শহরের নাম">
+</div>
+
+<div>
+  <label for="profileUpazila">থানা / উপজেলা / এলাকা</label>
+  <input id="profileUpazila" name="upazila" maxlength="100"
+         placeholder="থানা, উপজেলা বা স্থানীয় এলাকা">
+</div>
+
+<div>
+  <label for="profileExperience">কাজের অভিজ্ঞতা</label>
+  <input id="profileExperience" name="experience" maxlength="100"
+         placeholder="যেমন: ৫ বছরের অভিজ্ঞতা">
+
+<div class="phone-input-group">
+  <label for="countryCode">Country code</label>
+  <input
+    type="tel"
+    id="profileMobile"
+    name="profileMobile"
+    placeholder="1712345678"
+  />
+</div>
+
+  <small>দেশের কোড নির্বাচন করে মোবাইল নম্বর লিখুন।</small>
+</div>
+
           </div>
         </div>
         <label for="profileBio">নিজের সম্পর্কে</label>
+        <div class="profile-photo-group">
+  <label for="profilePhoto">প্রোফাইল ছবি</label>
+
+  <img
+    id="profilePhotoPreview"
+    src="https://placehold.co/140x140?text=Photo"
+    alt="Profile Preview"
+    class="profile-photo-preview">
+
+  <input
+    id="profilePhoto"
+    type="file"
+    accept="image/png,image/jpeg,image/webp">
+</div>
         <textarea id="profileBio" name="bio" rows="4" maxlength="2000" placeholder="আপনার অভিজ্ঞতা ও সেবার বিবরণ"></textarea>
         <label>
           <input id="profileIsPublic" name="is_public" type="checkbox" checked style="display:inline;width:auto;margin-right:8px">
@@ -235,7 +293,6 @@
   <a href="terms.html">Terms &amp; Conditions</a>
 </nav>
 </footer>
-
 <style>
   .site-footer {
     margin-top: 40px;
@@ -254,5 +311,21 @@
     text-decoration: underline;
   }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.10.5/build/js/intlTelInput.min.js"></script>
+<script>
+  const phoneInput = document.getElementById("profileMobile");
+
+  if (phoneInput && window.intlTelInput) {
+    window.intlTelInput(phoneInput, {
+      initialCountry: "bd",
+      separateDialCode: true,
+      nationalMode: true,
+      loadUtils: () =>
+        import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.10.5/build/js/utils.js")
+    });
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/libphonenumber-js@1/bundle/max.js"></script>
 </body>
 </html>
