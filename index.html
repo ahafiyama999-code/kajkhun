@@ -1,331 +1,164 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="bn">
-  
-<link
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bondhon-এ আপনার প্রয়োজনীয় পেশাজীবী, কর্মী ও ব্যবসা খুঁজুন।">
+  <title>Bondhon — আপনার প্রয়োজনীয় মানুষ খুঁজুন</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js" defer></script>
+  <link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css"
 >
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="KajKhun-এ আপনার প্রয়োজনীয় পেশাজীবী, কর্মী ও ব্যবসা খুঁজুন।">
-  <title>KajKhun — আপনার প্রয়োজনীয় মানুষ খুঁজুন</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    :root {
-      font-family: Arial, sans-serif;
-      color: #172033;
-      background: #f5f7fb;
-    }
-    body { margin: 0; }
-    header {
-      background: #103b35;
-      color: white;
-      padding: 20px max(20px, calc((100% - 1100px)/2));
-    }
-    header h1 { margin: 0 0 6px; }
-    nav { display: flex; flex-wrap: wrap; gap: 18px; margin: 18px 0; }
-    nav a { color: white; text-decoration: none; }
-    button, .button {
-      cursor: pointer;
-      border: 0;
-      border-radius: 8px;
-      padding: 11px 16px;
-      background: #087f5b;
-      color: white;
-      font-size: 15px;
-      text-decoration: none;
-      display: inline-block;
-    }
-    button:disabled { opacity: .6; cursor: wait; }
-    input, textarea, select {
-      display: block;
-      box-sizing: border-box;
-      width: 100%;
-      padding: 12px;
-      margin: 7px 0 16px;
-      border: 1px solid #ccd4df;
-      border-radius: 8px;
-      font: inherit;
-      background: white;
-    }
-    label { font-weight: 600; }
-    main { max-width: 1100px; margin: auto; padding: 20px; }
-    section {
-      background: white;
-      margin: 22px 0;
-      padding: 24px;
-      border-radius: 14px;
-      box-shadow: 0 3px 15px #1020300b;
-    }
-    .hero { background: #e2f4ec; padding: 40px 24px; }
-    .hero h2 { font-size: clamp(28px, 5vw, 44px); margin-top: 0; }
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-    .form-grid > div { min-width: 0; }
-    .profile-card { border: 1px solid #dce3e8; border-radius: 10px; padding: 16px; margin: 12px 0; }
-    .muted { color: #64748b; }
-    footer { padding: 25px; text-align: center; background: #103b35; color: white; }
-    dialog {
-      width: min(420px, calc(100% - 32px));
-      padding: 24px;
-      border: 0;
-      border-radius: 14px;
-      box-sizing: border-box;
-    }
-    dialog::backdrop { background: #071b18a8; }
-    [hidden] { display: none !important; }
-  </style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.10.5/build/css/intlTelInput.css">
 </head>
 <body>
-  <header>
-    <h1>KajKhun</h1>
-    <p>আপনার কাজের বিশ্বস্ত ঠিকানা</p>
-    <nav aria-label="প্রধান নেভিগেশন">
-      <a href="#home">হোম</a>
-      <a href="#categories">পেশা ও সেবা</a>
-      <a href="#people">মানুষ খুঁজুন</a>
-      <a href="#myProfile">আমার প্রোফাইল</a>
-      <a href="#contact">যোগাযোগ</a>
+<header class="site-header">
+  <div class="nav-wrap">
+    <a class="brand" href="#home" aria-label="Bondhon home">
+      <span class="brand-mark">🤝</span><span><strong>Bond<span>hon</span></strong><small>আপনার প্রয়োজনীয় মানুষ খুঁজুন</small></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="মেনু খুলুন">☰</button>
+    <nav class="main-nav" id="mainNav">
+      <a class="active" href="#home">⌂ হোম</a><a href="#categories">▦ ক্যাটাগরি</a><a href="#people">♟ মানুষ</a><a href="#profile">＋ প্রোফাইল</a><a href="#about">ⓘ আমাদের সম্পর্কে</a>
     </nav>
-    <div id="authButtons">
-      <button id="signinBtn" type="button">Sign In</button>
-      <button id="signoutBtn" type="button" hidden>Sign Out</button>
+    <div class="nav-actions"><button class="icon-btn" id="navSearch" aria-label="সার্চ">⌕</button><button class="btn btn-outline" id="signinBtn">সাইন ইন</button><button class="btn btn-primary" id="signupBtn">নিবন্ধন</button><button class="btn btn-outline hidden" id="signoutBtn">সাইন আউট</button></div>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="hero-shade"></div>
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow"><span>✦</span> আপনার কাজের বিশ্বস্ত ঠিকানা</span>
+      <h1>Bondhon — আপনার প্রয়োজনীয়<br><em>পেশাজীবী, কর্মী ও ব্যবসা খুঁজুন</em></h1>
+      <p>এখানে আপনি সহজেই আপনার প্রয়োজনীয় মানুষ খুঁজে পাবেন — পেশাজীবী, কর্মী বা ব্যবসা, সবকিছু এক জায়গায়।</p>
     </div>
-    <p id="authStatus" aria-live="polite">আপনার প্রয়োজনীয় মানুষ খুঁজুন।</p>
-  </header>
+    <div class="hero-people" aria-label="বিভিন্ন পেশার মানুষ">
+      <div class="hero-person worker">👷</div><div class="hero-person doctor">👩‍⚕️</div><div class="hero-person business">👨‍💼</div><div class="hero-person teacher">👨‍🏫</div>
+      <div class="hero-note">সঠিক মানুষ<br>সঠিক কাজ<br>সঠিক যোগাযোগ</div>
+    </div>
+  </div>
+  <form class="search-panel" id="searchForm">
+    <label class="search-field"><span>♟</span><span class="field-content"><small>কাকে খুঁজছেন?</small><input id="searchInput" type="search" placeholder="যেমন: শিক্ষক, ইলেকট্রিশিয়ান, ডাক্তার"></span></label>
+    <label class="search-field"><span>📍</span><span class="field-content"><small>এলাকা বা শহর</small><input id="locationInput" type="search" placeholder="যেমন: ঢাকা, রাজশাহী"></span></label>
+    <button class="btn btn-search" type="submit">⌕ খুঁজুন <b>→</b></button>
+  </form>
+</section>
 
-  <main>
-    <section id="home" class="hero">
-      <h2>আপনার প্রয়োজনীয় মানুষ খুঁজুন</h2>
-      <p>পেশাজীবী, দক্ষ কর্মী, সেবাদাতা ও ব্যবসা খুঁজুন এক জায়গায়।</p>
-      <a class="button" href="#people">মানুষ খুঁজুন</a>
-      <a class="button" href="#myProfile">প্রোফাইল তৈরি করুন</a>
-    </section>
+<section class="trust-strip" id="about">
+  <div class="trust-item"><span class="trust-icon green">✓</span><div><b>নিরাপদ লগইন</b><small>আপনার তথ্য সুরক্ষিত রাখুন</small></div></div>
+  <div class="trust-item"><span class="trust-icon purple">♟</span><div><b>সহজে প্রোফাইল তৈরি</b><small>নিজের পেশা ও পরিচিতি তুলে ধরুন</small></div></div>
+  <div class="trust-item"><span class="trust-icon orange">⌕</span><div><b>পেশা ও এলাকা অনুসন্ধান</b><small>যার প্রয়োজন, সহজেই খুঁজে নিন</small></div></div>
+  <div class="trust-item"><span class="trust-icon pink">⚑</span><div><b>এড ও রিপোর্ট</b><small>প্রোফাইল সম্পর্কে রিপোর্ট করতে পারবেন</small></div></div>
+</section>
 
-<!-- KajKhun Advertisement Area -->
-<section id="advertisement" class="ad-section">
-  <div class="ad-label">Advertisement</div>
-
-  <div class="ad-box">
-    <p>Your Advertisement Here</p>
-    <small>Advertise your business on KajKhun</small>
+<section class="section" id="categories">
+  <div class="section-heading"><div><span class="section-kicker">আপনার প্রয়োজন অনুযায়ী</span><h2>জনপ্রিয় ক্যাটাগরি</h2><p>পেশা নির্বাচন করে দ্রুত মানুষ খুঁজুন</p></div><a class="text-link" href="#people">সব ক্যাটাগরি দেখুন →</a></div>
+  <div class="category-grid">
+    <button class="category cat-blue" data-category="চিকিৎসা"><span>🩺</span><b>চিকিৎসা</b><small>ডাক্তার, নার্স, ফার্মাসিস্ট</small></button>
+    <button class="category cat-purple" data-category="শিক্ষা"><span>🎓</span><b>শিক্ষা</b><small>শিক্ষক, কোচিং, ট্রেইনার</small></button>
+    <button class="category cat-green" data-category="ইলেকট্রিক"><span>🛠️</span><b>ইলেকট্রিক / টেকনিক্যাল</b><small>ইলেকট্রিশিয়ান, মেকানিক</small></button>
+    <button class="category cat-pink" data-category="আইটি"><span>💻</span><b>আইটি ও ডিজিটাল</b><small>ডিজাইনার, ডেভেলপার</small></button>
+    <button class="category cat-orange" data-category="ব্যবসা"><span>💼</span><b>ব্যবসা / প্রতিষ্ঠান</b><small>দোকান, সার্ভিস, কোম্পানি</small></button>
+    <button class="category cat-sky" data-category="কর্মী"><span>👷</span><b>কর্মী / শ্রমিক</b><small>ড্রাইভার, সহকারী, কারিগর</small></button>
+    <button class="category cat-yellow" data-category="নির্মাণ"><span>🏠</span><b>বাড়ি ও নির্মাণ</b><small>মিস্ত্রি, রাজমিস্ত্রি</small></button>
+    <button class="category cat-gray" data-category=""><span>•••</span><b>অন্যান্য</b><small>বিভিন্ন পেশা ও সেবা</small></button>
   </div>
 </section>
 
-    <section id="categories">
-      <h2>পেশা ও সেবা</h2>
-      <p>আপনার প্রয়োজন অনুযায়ী নাম, পেশা অথবা এলাকা দিয়ে খুঁজুন।</p>
-      <div class="form-grid">
-        <div><strong>শিক্ষা</strong><p class="muted">শিক্ষক, টিউটর ও প্রশিক্ষক</p></div>
-        <div><strong>প্রযুক্তি</strong><p class="muted">ডেভেলপার ও কম্পিউটার সেবা</p></div>
-        <div><strong>নির্মাণ</strong><p class="muted">ইলেকট্রিশিয়ান ও মিস্ত্রি</p></div>
-        <div><strong>ব্যবসা</strong><p class="muted">দোকান, প্রতিষ্ঠান ও সেবাদাতা</p></div>
-      </div>
-    </section>
+<section class="section people-section" id="people">
+  <div class="section-heading"><div><span class="section-kicker">Bondhon কমিউনিটি</span><h2>নির্বাচিত প্রোফাইল</h2><p>নতুন যুক্ত হওয়া পেশাজীবী ও ব্যবসার প্রোফাইল</p></div><span class="result-count" id="resultCount">প্রোফাইল লোড হচ্ছে...</span></div>
+  <div class="ad-slot"><span>বিজ্ঞাপনের স্থান</span><small>আপনার বিজ্ঞাপন এখানে প্রদর্শিত হতে পারে</small></div>
+  <div class="people-grid" id="searchResults"><div class="empty-state">প্রোফাইল লোড হচ্ছে...</div></div>
+</section>
 
-    <section id="people">
-      <h2>পেশাজীবী ও ব্যবসা খুঁজুন</h2>
-      <form id="searchForm">
-        <label for="searchInput">নাম, পেশা বা এলাকা</label>
-        <input id="searchInput" type="search" placeholder="যেমন: শিক্ষক, ঢাকা, ইলেকট্রিশিয়ান">
-        <button id="searchBtn" type="submit">Search</button>
-      </form>
-      <div id="searchResults" aria-live="polite">
-        <p class="muted">সার্চের ফলাফল এখানে দেখা যাবে।</p>
-      </div>
-    </section>
+<section class="section profile-section" id="profile">
+  <div class="profile-intro"><span class="section-kicker">Bondhon-এ যুক্ত হোন</span><h2>আপনার পরিচিতি সবার কাছে পৌঁছে দিন</h2><p>একটি প্রোফাইল তৈরি করুন, আপনার দক্ষতা ও যোগাযোগের তথ্য যোগ করুন।</p><button class="btn btn-primary" id="profileSignIn">প্রোফাইল তৈরি করুন →</button></div>
+  <form class="profile-form hidden" id="profileForm">
+    <h3>আপনার প্রোফাইল</h3>
+    <div class="form-grid">
+      <label>আপনার নাম<input id="fullName" required maxlength="100" placeholder="সম্পূর্ণ নাম"></label>
+      <label>পেশা / ব্যবসা<input id="profession" required maxlength="120" placeholder="যেমন: ইলেকট্রিশিয়ান"></label>
+      <label>বিভাগ<input id="division" placeholder="যেমন: রাজশাহী"></label>
+      <label>জেলা<input id="district" placeholder="যেমন: রাজশাহী"></label>
+      <label>উপজেলা / এলাকা<input id="upazila" placeholder="যেমন: পবা"></label>
+      <label>মোবাইল নম্বর<input id="profileMobile" type="tel" inputmode="tel" placeholder="+8801XXXXXXXXX"></label>
+      <label>অভিজ্ঞতা<input id="experience" placeholder="যেমন: ৫ বছর"></label>
+      <label>প্রোফাইল ছবি<input id="profilePhoto" type="file" accept="image/png,image/jpeg,image/webp"></label>
+      <label class="full">নিজের সম্পর্কে<textarea id="bio" rows="4" maxlength="1000" placeholder="আপনার কাজ, দক্ষতা ও অভিজ্ঞতা সম্পর্কে লিখুন"></textarea></label>
+    </div>
+    <div class="photo-preview-wrap"><img id="profilePhotoPreview" alt="ছবির প্রিভিউ" class="photo-preview hidden"></div>
+    <label class="check-line"><input type="checkbox" id="isPublic" checked> আমার প্রোফাইল সবাই দেখতে পারবে</label><label class="check-line">
+  <input type="checkbox" id="isActive" checked>
+  আমি বর্তমানে কাজ নিচ্ছি (Active)
+</label>
+    <button class="btn btn-primary" type="submit">প্রোফাইল সংরক্ষণ করুন</button><p class="form-message" id="profileMessage" role="status"></p>
+  </form>
+</section>
 
-    <section id="myProfile">
-      <h2>আমার প্রোফাইল</h2>
-      <p class="muted">নিজের পেশা বা ব্যবসার পরিচিতি তৈরি করুন। প্রোফাইল সংরক্ষণ করতে সাইন ইন করুন।</p>
-      <form id="profileForm">
-        <div class="form-grid">
-          <div>
-            <label for="profileName">নাম</label>
-            <input id="profileName" name="full_name" maxlength="100" placeholder="আপনার নাম">
-          </div>
-          <div>
-            <label for="profileProfession">পেশা বা ব্যবসা</label>
-            <input id="profileProfession" name="profession" maxlength="100" placeholder="আপনার পেশা">
-          </div>
-          <div>
-            <label for="profileLocation">এলাকা</label>
-            <input id="profileLocation" name="location" maxlength="150" placeholder="শহর বা এলাকা">
-            
-<div>
-  <label for="profileDivision">বিভাগ / স্টেট / প্রদেশ</label>
-  <input id="profileDivision" name="division" maxlength="100"
-         placeholder="বিভাগ বা প্রদেশের নাম">
-</div>
+<section class="report-section section" id="report">
+  <div><span class="section-kicker">কমিউনিটির নিরাপত্তা</span><h2>সন্দেহজনক প্রোফাইল রিপোর্ট করুন</h2><p>ভুয়া বা ভুল তথ্যযুক্ত প্রোফাইল দেখলে আমাদের জানান।</p></div>
+  <form id="reportForm" class="report-form"><input id="reportedProfileId" type="hidden"><select id="reportReason" required><option value="">রিপোর্টের কারণ নির্বাচন করুন</option><option value="fake_profile">ভুয়া প্রোফাইল</option><option value="scam">প্রতারণা / স্ক্যাম</option><option value="wrong_information">ভুল তথ্য</option><option value="harassment">হয়রানি</option><option value="other">অন্যান্য</option></select><button class="btn btn-outline" type="submit">রিপোর্ট পাঠান</button><p class="form-message" id="reportMessage" role="status"></p></form>
+</section>
 
-<div>
-  <label for="profileDistrict">জেলা / শহর</label>
-  <input id="profileDistrict" name="district" maxlength="100"
-         placeholder="জেলা বা শহরের নাম">
-</div>
+<section class="join-banner"><div class="join-symbol">🤝</div><div><span>আজই Bondhon-এ যুক্ত হোন!</span><h2>আপনার দক্ষতা ও কাজের পরিচয় পৌঁছে দিন সবার কাছে</h2><p>নতুন মানুষের সঙ্গে পরিচিত হোন, কাজের সুযোগ তৈরি করুন।</p></div><button class="btn btn-light" id="joinBtn">এখনই শুরু করুন →</button></section>
+</main>
 
-<div>
-  <label for="profileUpazila">থানা / উপজেলা / এলাকা</label>
-  <input id="profileUpazila" name="upazila" maxlength="100"
-         placeholder="থানা, উপজেলা বা স্থানীয় এলাকা">
-</div>
+<footer class="site-footer"><div class="footer-inner"><a class="brand footer-brand" href="#home"><span class="brand-mark">🤝</span><span><strong>Bondhon</strong><small>আপনার প্রয়োজনীয় মানুষ খুঁজুন</small></span></a><div class="footer-links"><a href="#home">হোম</a><a href="#people">মানুষ খুঁজুন</a><a href="#profile">প্রোফাইল</a><a href="#categories">ক্যাটাগরি</a><a href="#about">আমাদের সম্পর্কে</a></div><small>© <span id="year"></span> Bondhon. সর্বস্বত্ব সংরক্ষিত।</small></div></footer>
 
-<div>
-  <label for="profileExperience">কাজের অভিজ্ঞতা</label>
-  <input id="profileExperience" name="experience" maxlength="100"
-         placeholder="যেমন: ৫ বছরের অভিজ্ঞতা">
+<div class="modal hidden" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+  <div class="modal-card">
+    <button class="modal-close" id="closeAuth" aria-label="বন্ধ করুন">×</button>
 
-<div class="phone-input-group">
-  <label for="countryCode">Country code</label>
+    <div class="modal-logo">🤝 Bondhon</div>
+
+    <h2 id="authTitle">Bondhon-এ স্বাগতম</h2>
+    <p id="authSubtitle">আপনার অ্যাকাউন্টে প্রবেশ করুন</p>
+
+    <form id="authForm">
+
+      <label>
+  ইমেইল অথবা মোবাইল নম্বর
   <input
-    type="tel"
-    id="profileMobile"
-    name="profileMobile"
-    placeholder="1712345678"
-  />
+    id="authEmail"
+    type="text"
+    required
+    autocomplete="username"
+    placeholder="ইমেইল অথবা মোবাইল নম্বর"
+  >
+</label>
+
+      <label>
+        পাসওয়ার্ড
+        <input
+          id="authPassword"
+          type="password"
+          required
+          minlength="6"
+          autocomplete="current-password"
+          placeholder="কমপক্ষে ৬ অক্ষর"
+        >
+      </label>
+
+      <button class="btn btn-primary wide" id="authSubmit" type="submit">
+        সাইন ইন
+      </button>
+
+      <p class="form-message" id="authMessage" role="status"></p>
+    </form>
+
+    <button class="switch-auth" id="switchAuth">
+      নতুন অ্যাকাউন্ট তৈরি করুন
+    </button>
+  </div>
 </div>
-
-  <small>দেশের কোড নির্বাচন করে মোবাইল নম্বর লিখুন।</small>
-</div>
-
-          </div>
-        </div>
-        <label for="profileBio">নিজের সম্পর্কে</label>
-        <div class="profile-photo-group">
-  <label for="profilePhoto">প্রোফাইল ছবি</label>
-
-  <img
-    id="profilePhotoPreview"
-    src="https://placehold.co/140x140?text=Photo"
-    alt="Profile Preview"
-    class="profile-photo-preview">
-
-  <input
-    id="profilePhoto"
-    type="file"
-    accept="image/png,image/jpeg,image/webp">
-</div>
-        <textarea id="profileBio" name="bio" rows="4" maxlength="2000" placeholder="আপনার অভিজ্ঞতা ও সেবার বিবরণ"></textarea>
-        <label>
-          <input id="profileIsPublic" name="is_public" type="checkbox" checked style="display:inline;width:auto;margin-right:8px">
-          আমার প্রোফাইল পাবলিকভাবে দেখান
-        </label>
-        <p><button id="saveProfileBtn" type="submit">প্রোফাইল সংরক্ষণ করুন</button></p>
-        <p id="profileStatus" aria-live="polite"></p>
-      </form>
-      <p class="muted">নোট: এই সংস্করণে ছবি আপলোডের ইনপুট রাখা হয়নি।</p>
-    </section>
-
-    <section id="contact">
-      <h2>যোগাযোগের তথ্য</h2>
-      <p>পাবলিক প্রোফাইলের যোগাযোগের তথ্য সুরক্ষিতভাবে দেখানোর জন্য লগইন, ডেটাবেস এবং অনুমতির নিয়ম সঠিকভাবে সেট করতে হবে।</p>
-      <div id="contactResults">
-        <p class="muted">প্রোফাইলের যোগাযোগের তথ্য এখানে দেখানো হবে, যদি অনুমতি থাকে।</p>
-      </div>
-    </section>
-
-    <section id="report">
-      <h2>প্রোফাইল সম্পর্কে অভিযোগ</h2>
-      <p>কোনো প্রোফাইলে সমস্যা দেখলে সেটির বিরুদ্ধে অভিযোগ জানানোর ব্যবস্থা ব্যবহার করুন।</p>
-      <form id="reportForm">
-        <label for="reportProfileId">যে প্রোফাইল সম্পর্কে অভিযোগ</label>
-        <input id="reportProfileId" name="reported_profile_id" placeholder="প্রোফাইল ID" required>
-        <label for="reportReason">অভিযোগের কারণ</label>
-        <select id="reportReason" name="reason" required>
-          <option value="">কারণ নির্বাচন করুন</option>
-          <option value="False information">ভুল তথ্য</option>
-          <option value="Spam">স্প্যাম</option>
-          <option value="Inappropriate content">অনুপযুক্ত বিষয়বস্তু</option>
-          <option value="Other">অন্যান্য</option>
-        </select>
-        <label for="reportDetails">বিস্তারিত (ঐচ্ছিক)</label>
-        <textarea id="reportDetails" name="details" rows="3" maxlength="2000"></textarea>
-        <button id="submitReportBtn" type="submit">অভিযোগ জমা দিন</button>
-        <p id="reportStatus" aria-live="polite"></p>
-      </form>
-    </section>
-  </main>
-
-  <footer>
-    <p>© KajKhun — আপনার প্রয়োজনীয় মানুষ খুঁজুন</p>
-    <p>পেশাজীবী, কর্মী ও ব্যবসা খুঁজুন এক জায়গায়।</p>
-    <a href="admin.html" style="color:white">Admin Panel</a>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="script.js"></script>
-  
-<footer class="site-footer">
-  <p>© 2026 KajKhun. All rights reserved.</p>
-  <nav aria-label="Legal links">
-    <a href="privacy.html">Privacy Policy</a>
-    <span> | </span>
-    <a href="terms.html">Terms &amp; Conditions</a>
-  
-<nav aria-label="Important links">
-  <a href="about.html">About Us</a>
-  <span> | </span>
-  <a href="privacy.html">Privacy Policy</a>
-  <span> | </span>
-  <a href="terms.html">Terms &amp; Conditions</a>
-
-<nav aria-label="Important links">
-  <a href="about.html">About Us</a>
-  <span> | </span>
-  <a href="guide.html">পেশাজীবী গাইড</a>
-  <span> | </span>
-  <a href="privacy.html">Privacy Policy</a>
-  <span> | </span>
-  <a href="terms.html">Terms &amp; Conditions</a>
-
-<nav aria-label="Important links">
-  <a href="about.html">About Us</a>
-  <span> | </span>
-  <a href="guide.html">পেশাজীবী গাইড</a>
-  <span> | </span>
-  <a href="find-professional.html">বিশ্বস্ত পেশাজীবী খুঁজুন</a>
-  <span> | </span>
-  <a href="privacy.html">Privacy Policy</a>
-  <span> | </span>
-  <a href="terms.html">Terms &amp; Conditions</a>
-</nav>
-</footer>
-<style>
-  .site-footer {
-    margin-top: 40px;
-    padding: 28px 16px;
-    text-align: center;
-    background: #f1f5f9;
-    color: #475569;
-    font-size: 14px;
-  }
-  .site-footer a {
-    color: #166534;
-    text-decoration: none;
-    margin: 0 6px;
-  }
-  .site-footer a:hover {
-    text-decoration: underline;
-  }
-</style>
-
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.10.5/build/js/intlTelInput.min.js"></script>
-<script>
-  const phoneInput = document.getElementById("profileMobile");
-
-  if (phoneInput && window.intlTelInput) {
-    window.intlTelInput(phoneInput, {
-      initialCountry: "bd",
-      separateDialCode: true,
-      nationalMode: true,
-      loadUtils: () =>
-        import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.10.5/build/js/utils.js")
-    });
-  }
-</script>
-<script src="https://cdn.jsdelivr.net/npm/libphonenumber-js@1/bundle/max.js"></script>
+<div class="toast" id="toast" role="status"></div>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
 </body>
 </html>

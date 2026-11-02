@@ -1,7 +1,7 @@
 
 "use strict";
 
-// KajKhun Admin Panel
+// Bondhon Admin Panel
 const SUPABASE_URL = "https://lyuzgzudmnmarbnsplvk.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_HET6b58nsRcn54-mBRxL6g_gm8HM0UX";
@@ -22,6 +22,13 @@ let isAdmin = false;
 
 const $ = (id) => document.getElementById(id);
 
+const REPORT_STATUSES = [
+  { value: "pending", label: "Pending" },
+  { value: "reviewing", label: "Reviewing" },
+  { value: "resolved", label: "Resolved" },
+  { value: "dismissed", label: "Dismissed" }
+];
+
 function setStatus(id, message) {
   const element = $(id);
   if (element) element.textContent = message;
@@ -35,6 +42,7 @@ function setTableMessage(id, columns, message) {
 
   const row = document.createElement("tr");
   const cell = document.createElement("td");
+
   cell.colSpan = columns;
   cell.textContent = message;
 
@@ -51,8 +59,9 @@ function addCell(row, value) {
 
 async function verifyAdmin() {
   isAdmin = false;
-  setStatus("adminStatus", "Checking sign-in...");
-  setTableMessage("profilesBody", 4, "Checking admin access...");
+
+  setStatus("adminStatus", "Checking administrator access...");
+  setTableMessage("profilesBody", 5, "Checking admin access...");
   setTableMessage("reportsBody", 6, "Checking admin access...");
 
   const { data, error } = await supabaseClient.auth.getSession();
@@ -106,7 +115,7 @@ async function loadProfiles() {
 
   if (error) {
     setStatus("profilesStatus", "Could not load profiles: " + error.message);
-    setTableMessage("profilesBody", 4, "Profile loading failed.");
+    setTableMessage("profilesBody", 5, "Profile loading failed.");
     return;
   }
 
@@ -116,7 +125,7 @@ async function loadProfiles() {
   body.replaceChildren();
 
   if (!profiles || profiles.length === 0) {
-    setTableMessage("profilesBody", 4, "No profiles found.");
+    setTableMessage("profilesBody", 5, "No profiles found.");
     setStatus("profilesStatus", "No profiles found.");
     return;
   }
@@ -127,22 +136,19 @@ async function loadProfiles() {
     addCell(row, profile.full_name || "Unnamed");
     addCell(row, profile.profession || "Not specified");
     addCell(row, profile.location || "Not specified");
-        addCell(row, profile.is_public ? "Yes" : "No");
+    addCell(row, profile.is_public ? "Yes" : "No");
 
     const actionCell = document.createElement("td");
-    const toggleButton = document.createElement("button");
+    const button = document.createElement("button");
 
-    toggleButton.type = "button";
-    toggleButton.className = "admin-button";
-    toggleButton.textContent = profile.is_public
-      ? "Make Private"
-      : "Make Public";
+    button.type = "button";
+    button.className = "admin-button";
+    button.textContent = profile.is_public ? "Make Private" : "Make Public";
 
-    toggleButton.addEventListener("click", async () => {
+    button.addEventListener("click", async () => {
       if (!isAdmin) return;
 
-      toggleButton.disabled = true;
-      setStatus("profilesStatus", "Updating profile visibility...");
+      button.disabled = true;
 
       const { error: updateError } = await supabaseClient
         .from("profiles")
@@ -153,18 +159,15 @@ async function loadProfiles() {
         .eq("id", profile.id);
 
       if (updateError) {
-        toggleButton.disabled = false;
-        setStatus(
-          "profilesStatus",
-          "Update failed: " + updateError.message
-        );
+        button.disabled = false;
+        setStatus("profilesStatus", "Update failed: " + updateError.message);
         return;
       }
 
       await loadProfiles();
     });
 
-    actionCell.appendChild(toggleButton);
+    actionCell.appendChild(button);
     row.appendChild(actionCell);
     body.appendChild(row);
   }
@@ -206,46 +209,66 @@ async function loadReports() {
     addCell(row, report.reported_profile_id);
     addCell(row, report.reason);
     addCell(row, report.details || "");
-    addCell(row, report.status || "pending");
 
-    const actionCell = document.createElement("td");
+    // Status dropdown
+    const statusCell = document.createElement("td");
     const select = document.createElement("select");
 
-    for (const status of ["pending", "reviewing", "resolved", "rejected"]) {
+    select.className = "admin-button";
+
+    for (const item of REPORT_STATUSES) {
       const option = document.createElement("option");
-      option.value = status;
-      option.textContent = status;
+      option.value = item.value;
+      option.textContent = item.label;
       select.appendChild(option);
     }
 
-    select.value = report.status || "pending";
+    select.value = REPORT_STATUSES.some(
+      item => item.value === report.status
+    ) ? report.status : "pending";
 
-    const save = document.createElement("button");
-    save.type = "button";
-    save.textContent = "Save";
+    statusCell.appendChild(select);
+    row.appendChild(statusCell);
 
-    save.addEventListener("click", async () => {
+    // Save button
+    const actionCell = document.createElement("td");
+    const saveButton = document.createElement("button");
+
+    saveButton.type = "button";
+    saveButton.className = "admin-button";
+    saveButton.textContent = "Save";
+
+    saveButton.addEventListener("click", async () => {
       if (!isAdmin) return;
 
-      save.disabled = true;
+      saveButton.disabled = true;
+      select.disabled = true;
+
+      setStatus("reportsStatus", "Updating report status...");
 
       const { error: updateError } = await supabaseClient
         .from("profile_reports")
         .update({ status: select.value })
         .eq("id", report.id);
 
-      save.disabled = false;
-
       if (updateError) {
-        setStatus("reportsStatus", "Update failed: " + updateError.message);
+        saveButton.disabled = false;
+        select.disabled = false;
+
+        setStatus(
+          "reportsStatus",
+          "Status update failed: " + updateError.message
+        );
         return;
       }
 
+      setStatus("reportsStatus", "Report status updated successfully.");
       await loadReports();
     });
 
-    actionCell.append(select, save);
+    actionCell.appendChild(saveButton);
     row.appendChild(actionCell);
+
     body.appendChild(row);
   }
 
@@ -261,11 +284,11 @@ document.addEventListener("DOMContentLoaded", () => {
   $("refreshProfiles")?.addEventListener("click", loadProfiles);
   $("refreshReports")?.addEventListener("click", loadReports);
 
-  verifyAdmin().catch((error) => {
+  verifyAdmin().catch(error => {
     setStatus("adminStatus", "Unexpected error: " + error.message);
   });
 
-  supabaseClient.auth.onAuthStateChange((event) => {
+  supabaseClient.auth.onAuthStateChange(event => {
     if (event === "SIGNED_OUT") {
       isAdmin = false;
       setStatus("adminStatus", "You are signed out.");
