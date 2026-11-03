@@ -4,76 +4,220 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="KajKhun সম্পর্কে জানুন—পেশাজীবী, কর্মী ও ব্যবসা খুঁজে পাওয়ার একটি অনলাইন ডিরেক্টরি।">
-  <title>About Us — KajKhun</title>
+  <title>About Us - Bondhon</title>
+  <meta name="description" content="Bondhon সম্পর্কে জানুন। এখানে পেশাজীবী, কর্মী ও সেবাদানকারীদের খুঁজে পাওয়া এবং নিজের প্রোফাইল তৈরি করা যায়।">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.8;
+    * {
       margin: 0;
-      padding: 24px;
-      color: #1e293b;
-      background: #f8fafc;
+      padding: 0;
+      box-sizing: border-box;
     }
-    main {
-      max-width: 850px;
-      margin: 30px auto;
-      padding: 28px;
+
+    body {
+      font-family: 'Hind Siliguri', sans-serif;
+      background: #f5f8fc;
+      color: #263445;
+      line-height: 1.8;
+    }
+
+    header {
+      background: #ffffff;
+      padding: 16px 7%;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      color: #1677d2;
+      font-size: 28px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    nav a {
+      color: #263445;
+      text-decoration: none;
+      margin-left: 18px;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #1677d2;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 45px auto;
+      padding: 0 20px;
+    }
+
+    .content {
       background: white;
-      border-radius: 14px;
+      padding: 35px;
+      border-radius: 16px;
+      box-shadow: 0 5px 25px rgba(0,0,0,.05);
     }
-    h1, h2 { color: #166534; }
-    a { color: #2563eb; }
+
+    h1 {
+      color: #1677d2;
+      font-size: 34px;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      color: #1677d2;
+      font-size: 23px;
+      margin: 25px 0 8px;
+    }
+
+    p {
+      margin-bottom: 12px;
+    }
+
+    ul {
+      padding-left: 25px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .highlight {
+      background: #edf6ff;
+      padding: 18px;
+      border-left: 4px solid #1677d2;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .home-btn {
+      display: inline-block;
+      background: #1677d2;
+      color: white;
+      padding: 10px 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-top: 22px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #667085;
+    }
+
+    @media(max-width: 600px) {
+      header {
+        padding: 14px 5%;
+      }
+
+      nav a {
+        margin-left: 10px;
+      }
+
+      .content {
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+    }
   </style>
 </head>
+
 <body>
-<main>
-  <h1>KajKhun সম্পর্কে</h1>
 
-  <p>
-    KajKhun একটি অনলাইন ডিরেক্টরি, যার উদ্দেশ্য হলো মানুষকে
-    প্রয়োজনীয় পেশাজীবী, কর্মী এবং ব্যবসা খুঁজে পেতে সাহায্য করা।
-  </p>
+<header>
+  <a href="index.html" class="logo">🤝 Bondhon</a>
 
-  <h2>আমাদের লক্ষ্য</h2>
-  <p>
-    মানুষ যেন নিজের দক্ষতা, পেশা বা ব্যবসার পরিচিতি দিতে পারে
-    এবং প্রয়োজন অনুযায়ী অন্যরা সেই তথ্য খুঁজে পেতে পারে—
-    KajKhun সেই সুযোগ তৈরি করতে চায়।
-  </p>
+  <nav>
+    <a href="index.html">হোম</a>
+    <a href="about.html">আমাদের সম্পর্কে</a>
+    <a href="contact.html">যোগাযোগ</a>
+  </nav>
+</header>
 
-  <h2>কীভাবে KajKhun ব্যবহার করবেন</h2>
-  <ol>
-    <li>অ্যাকাউন্ট তৈরি করে সাইন ইন করুন।</li>
-    <li>নিজের নাম, পেশা, অবস্থান এবং পরিচিতি দিয়ে প্রোফাইল তৈরি করুন।</li>
-    <li>প্রকাশ্য প্রোফাইলের সেটিং যাচাই করুন।</li>
-    <li>সার্চ ব্যবহার করে প্রয়োজনীয় পেশাজীবী বা ব্যবসা খুঁজুন।</li>
-    <li>কোনো ব্যক্তির সঙ্গে কাজ করার আগে তাঁর পরিচয় ও তথ্য যাচাই করুন।</li>
-  </ol>
+<main class="container">
+  <article class="content">
 
-  <h2>নিরাপদ ব্যবহার</h2>
-  <p>
-    ব্যবহারকারীদের সঠিক তথ্য দিতে এবং অন্যের গোপনীয়তার প্রতি
-    সম্মান দেখাতে অনুরোধ করা হচ্ছে। কোনো প্রতারণা বা সন্দেহজনক
-    কার্যকলাপ দেখলে সাইটের রিপোর্ট ফিচার ব্যবহার করুন।
-  </p>
+    <h1>আমাদের সম্পর্কে</h1>
 
-  <h2>আমাদের সেবা</h2>
-  <p>
-    KajKhun একটি পরিচিতি ও অনুসন্ধান প্ল্যাটফর্ম। আমরা কোনো
-    পেশাজীবীর দক্ষতা, পরিচয়, কাজের মান বা লেনদেনের নিশ্চয়তা
-    দিই না। ব্যবহারকারীদের নিজ দায়িত্বে যাচাই করতে হবে।
-  </p>
+    <p>
+      Bondhon একটি অনলাইন প্ল্যাটফর্ম, যার উদ্দেশ্য হলো
+      মানুষের সঙ্গে প্রয়োজনীয় পেশাজীবী, কর্মী ও সেবাদানকারীদের
+      যোগাযোগ সহজ করা।
+    </p>
 
-  <h2>যোগাযোগ</h2>
-  <p>
-    প্রশ্ন বা মতামত জানানোর জন্য এখানে আপনার কার্যকর যোগাযোগের
-    ইমেইল ঠিকানা যোগ করুন।
-  </p>
+    <h2>Bondhon কী?</h2>
 
-  <p><a href="index.html">হোমপেজে ফিরে যান</a></p>
-  <p><a href="privacy.html">Privacy Policy</a></p>
-  <p><a href="terms.html">Terms &amp; Conditions</a></p>
+    <p>
+      Bondhon-এর মাধ্যমে ব্যবহারকারীরা নিজেদের পেশা,
+      দক্ষতা ও পরিচিতি দিয়ে একটি প্রোফাইল তৈরি করতে পারেন।
+      অন্য ব্যবহারকারীরা পেশা এবং এলাকা অনুযায়ী প্রয়োজনীয়
+      প্রোফাইল খুঁজতে পারেন।
+    </p>
+
+    <h2>আমাদের লক্ষ্য</h2>
+
+    <p>
+      আমাদের লক্ষ্য হলো এমন একটি সহজ অনলাইন পরিবেশ তৈরি করা,
+      যেখানে মানুষ নিজেদের কাজ ও দক্ষতার পরিচিতি তুলে ধরতে
+      পারবেন এবং প্রয়োজন অনুযায়ী অন্যদের খুঁজে পাবেন।
+    </p>
+
+    <h2>Bondhon-এর সুবিধা</h2>
+
+    <ul>
+      <li>নিজের পেশাগত প্রোফাইল তৈরি করা।</li>
+      <li>পেশা ও এলাকা অনুযায়ী প্রোফাইল খোঁজা।</li>
+      <li>নিজের ছবি ও পরিচিতি যুক্ত করা।</li>
+      <li>প্রোফাইল Active অথবা Inactive রাখা।</li>
+      <li>অনুপযুক্ত প্রোফাইল রিপোর্ট করা।</li>
+    </ul>
+
+    <h2>আমাদের দায়িত্ব</h2>
+
+    <p>
+      আমরা ব্যবহারকারীদের জন্য একটি সহজ ও নিরাপদ
+      প্ল্যাটফর্ম গড়ে তোলার চেষ্টা করি। তবে ব্যবহারকারীদের
+      দেওয়া তথ্যের সত্যতা স্বাধীনভাবে যাচাই করা হয়েছে—
+      এমন নিশ্চয়তা Bondhon দেয় না। যোগাযোগের আগে
+      প্রয়োজনীয় তথ্য নিজ দায়িত্বে যাচাই করুন।
+    </p>
+
+    <div class="highlight">
+      <strong>Bondhon — মানুষ খুঁজুন, সম্পর্ক গড়ুন।</strong>
+      <p>
+        আপনার প্রয়োজনীয় মানুষ খুঁজতে এবং নিজের দক্ষতা
+        তুলে ধরতে Bondhon ব্যবহার করুন।
+      </p>
+    </div>
+
+    <a href="index.html" class="home-btn">
+      হোম পেজে ফিরে যান
+    </a>
+
+  </article>
 </main>
+
+<footer>
+  © <span id="year"></span> Bondhon. সর্বস্বত্ব সংরক্ষিত।
+</footer>
+
+<script>
+  document.getElementById("year").textContent =
+    new Date().getFullYear();
+</script>
+
 </body>
 </html>
