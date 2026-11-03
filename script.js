@@ -1,14 +1,12 @@
 
 /* ============================================
-   BONDHON - FRESH script.js
-   Email + Password Login Only
+   BONDHON - COMPLETE FRESH script.js
+   Authentication + Profile + Active Status
+   Photo Upload + Search + Contact + Report
 ============================================ */
 
-const SUPABASE_URL =
-  "https://lyuzgzudmnmarbnsplvk.supabase.co";
-
-const SUPABASE_ANON_KEY =
-  "sb_publishable_HET6b58nsRcn54-mBRxL6g_gm8HM0UX";
+const SUPABASE_URL = "https://lyuzgzudmnmarbnsplvk.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_HET6b58nsRcn54-mBRxL6g_gm8HM0UX";
 
 if (!window.supabase) {
   throw new Error("Supabase library load হয়নি।");
@@ -29,6 +27,7 @@ const supabaseClient = window.supabase.createClient(
 let currentUser = null;
 let authMode = "signin";
 let selectedPhoto = null;
+let authPhoneInput = null;
 
 const $ = id => document.getElementById(id);
 
@@ -38,7 +37,6 @@ const $ = id => document.getElementById(id);
 
 function showMessage(id, message, success = false) {
   const element = $(id);
-
   if (!element) return;
 
   element.textContent = message;
@@ -47,385 +45,353 @@ function showMessage(id, message, success = false) {
 
 function showToast(message) {
   const toast = $("toast");
-
   if (!toast) return;
 
   toast.textContent = message;
   toast.classList.add("show");
 
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 3000);
+  setTimeout(() => toast.classList.remove("show"), 3000);
 }
+
 /* ============================================
-   PART 2 - EMAIL + PASSWORD AUTHENTICATION
+   INTERNATIONAL PHONE INPUT
 ============================================ */
 
-// Open authentication modal
-function openAuth(mode = "signin") {
-  authMode = mode;
+function initializeAuthPhoneInput() {
+  const input = $("authEmail");
 
-  const modal = $("authModal");
-
-  if (!modal) return;
-
-  modal.style.display = "flex";
-
-  updateAuthMode();
-}
-
-// Close authentication modal
-function closeAuth() {
-  const modal = $("authModal");
-
-  if (modal) {
-    modal.style.display = "none";
-  }
-
-  showMessage("authMessage", "");
-}
-
-// Update login/signup interface
-function updateAuthMode() {
-  const title = $("authTitle");
-  const subtitle = $("authSubtitle");
-  const submit = $("authSubmit");
-  const switchText = $("switchAuth");
-
-  if (authMode === "signup") {
-    if (title) title.textContent = "Create Your Account";
-
-    if (subtitle) {
-      subtitle.textContent =
-        "Create your Bondhon account using your email.";
-    }
-
-    if (submit) submit.textContent = "Create Account";
-
-    if (switchText) {
-      switchText.textContent = "Already have an account? Sign In";
-    }
-  } else {
-    if (title) title.textContent = "Sign In";
-
-    if (subtitle) {
-      subtitle.textContent =
-        "Sign in to your Bondhon account.";
-    }
-
-    if (submit) submit.textContent = "Sign In";
-
-    if (switchText) {
-      switchText.textContent = "Don't have an account? Sign Up";
-    }
-  }
-
-  showMessage("authMessage", "");
-}
-
-// Switch between login and signup
-function switchAuthMode() {
-  authMode = authMode === "signin" ? "signup" : "signin";
-
-  updateAuthMode();
-}
-
-// Email authentication form
-async function handleAuthSubmit(event) {
-  event.preventDefault();
-
-  const email = $("authEmail")?.value.trim();
-  const password = $("authPassword")?.value;
-  const submitButton = $("authSubmit");
-
-  if (!email || !password) {
-    showMessage(
-      "authMessage",
-      "Please enter your email and password."
-    );
+  if (!input || !window.intlTelInput) {
+    console.warn("International phone input library পাওয়া যায়নি।");
     return;
   }
 
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (authPhoneInput) return;
 
-  if (!emailPattern.test(email)) {
+  authPhoneInput = window.intlTelInput(input, {
+    initialCountry: "bd",
+    separateDialCode: true,
+    nationalMode: true,
+    formatOnDisplay: true,
+    autoPlaceholder: "polite",
+    preferredCountries: ["bd", "us", "gb", "in", "sa", "ae"],
+    utilsScript:
+      "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"
+  });
+}
+
+async function getInternationalPhoneNumber() {
+  if (!authPhoneInput) {
+    throw new Error(
+      "Country Code সুবিধা চালু হয়নি। পেজ Refresh করে আবার চেষ্টা করুন।"
+    );
+  }
+
+  if (authPhoneInput.promise) {
+    await authPhoneInput.promise;
+  }
+
+  if (!authPhoneInput.getSelectedCountryData()?.dialCode) {
+    throw new Error("মোবাইল নম্বরের Country Code নির্বাচন করুন।");
+  }
+
+  if (!authPhoneInput.isValidNumber()) {
+    throw new Error(
+      "সঠিক মোবাইল নম্বর লিখুন। বাংলাদেশ হলে 017XXXXXXXX নম্বরটি 0 বাদ দিয়ে লিখুন।"
+    );
+  }
+
+  return authPhoneInput.getNumber();
+}
+
+/* ============================================
+   AUTHENTICATION MODAL
+============================================ */
+
+function openAuthModal(mode = "signin") {
+  authMode = mode;
+  updateAuthUI();
+
+  const modal = $("authModal");
+  if (!modal) return;
+
+  modal.classList.remove("hidden");
+  modal.style.display = "flex";
+}
+
+function closeAuthModal() {
+  const modal = $("authModal");
+  if (!modal) return;
+
+  modal.classList.add("hidden");
+  modal.style.display = "none";
+}
+
+function updateAuthUI() {
+  if ($("authTitle")) {
+    $("authTitle").textContent =
+      authMode === "signin"
+        ? "Bondhon-এ স্বাগতম"
+        : "নতুন অ্যাকাউন্ট তৈরি করুন";
+  }
+
+  if ($("authSubtitle")) {
+    $("authSubtitle").textContent =
+      authMode === "signin"
+        ? "ইমেইল অথবা মোবাইল নম্বর দিয়ে প্রবেশ করুন"
+        : "ইমেইল অথবা মোবাইল নম্বর দিয়ে যুক্ত হোন";
+  }
+
+  if ($("authSubmit")) {
+    $("authSubmit").textContent =
+      authMode === "signin" ? "সাইন ইন" : "নিবন্ধন করুন";
+  }
+
+  if ($("switchAuth")) {
+    $("switchAuth").textContent =
+      authMode === "signin"
+        ? "নতুন অ্যাকাউন্ট তৈরি করুন"
+        : "আগে থেকেই অ্যাকাউন্ট আছে? সাইন ইন";
+  }
+
+  if ($("authPassword")) {
+    $("authPassword").autocomplete =
+      authMode === "signin" ? "current-password" : "new-password";
+  }
+
+  showMessage("authMessage", "");
+}
+
+function identifyLoginType(value) {
+  return value.includes("@") ? "email" : "phone";
+}
+
+/* ============================================
+   SIGN UP AND SIGN IN
+============================================ */
+
+async function handleAuthentication(event) {
+  event.preventDefault();
+
+  const input = $("authEmail").value.trim();
+  const password = $("authPassword").value;
+  const button = $("authSubmit");
+
+  if (!input || !password) {
     showMessage(
       "authMessage",
-      "Please enter a valid email address."
+      "ইমেইল অথবা মোবাইল নম্বর এবং পাসওয়ার্ড দিন।"
     );
     return;
   }
 
   if (password.length < 6) {
-    showMessage(
-      "authMessage",
-      "Password must be at least 6 characters."
-    );
+    showMessage("authMessage", "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
     return;
   }
 
-  if (submitButton) {
-    submitButton.disabled = true;
-    submitButton.textContent = "Please wait...";
-  }
+  button.disabled = true;
+  button.textContent = "অপেক্ষা করুন...";
 
   try {
+    const loginType = identifyLoginType(input);
     let result;
 
-    if (authMode === "signup") {
-      result = await supabaseClient.auth.signUp({
-        email: email,
-        password: password
-      });
+    if (loginType === "email") {
+      const email = input.toLowerCase();
 
-      if (result.error) {
-        throw result.error;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        throw new Error("সঠিক ইমেইল ঠিকানা লিখুন।");
       }
 
-      if (!result.data.session) {
+      if (authMode === "signup") {
+        result = await supabaseClient.auth.signUp({
+          email,
+          password
+        });
+      } else {
+        result = await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+      }
+    } else {
+      const phone = await getInternationalPhoneNumber();
+
+      if (authMode === "signup") {
+        result = await supabaseClient.auth.signUp({
+          phone,
+          password
+        });
+      } else {
+        result = await supabaseClient.auth.signInWithPassword({
+          phone,
+          password
+        });
+      }
+    }
+
+    if (result.error) throw result.error;
+
+    if (authMode === "signup" && !result.data.session) {
+      if (loginType === "email") {
         showMessage(
           "authMessage",
-          "Account created! Please check your email and verify your account.",
+          "অ্যাকাউন্ট তৈরি হয়েছে। ইমেইলে পাঠানো লিংক দিয়ে যাচাই করুন।",
           true
         );
-
-        return;
+      } else {
+        showMessage(
+          "authMessage",
+          "অ্যাকাউন্ট তৈরি হয়েছে, কিন্তু ফোন যাচাই বা Supabase Phone Auto-confirm সেটিংসের কারণে এখনো লগইন হয়নি।",
+          true
+        );
       }
 
-      currentUser = result.data.user;
-
-      showMessage(
-        "authMessage",
-        "Account created successfully!",
-        true
-      );
-
-    } else {
-      result = await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
-      });
-
-      if (result.error) {
-        throw result.error;
-      }
-
-      currentUser = result.data.user;
-
-      showMessage(
-        "authMessage",
-        "Login successful!",
-        true
-      );
+      return;
     }
 
-    if (typeof updateAuthButtons === "function") {
-      updateAuthButtons();
-    }
+    currentUser = result.data.user;
+
+    await updateAuthButtons();
+
+    showMessage(
+      "authMessage",
+      authMode === "signup"
+        ? "অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!"
+        : "সফলভাবে লগইন হয়েছে!",
+      true
+    );
 
     setTimeout(() => {
-      closeAuth();
+      closeAuthModal();
+      $("authForm")?.reset();
 
-      if (typeof loadProfile === "function") {
-        loadProfile();
+      if (authPhoneInput) {
+        authPhoneInput.setCountry("bd");
       }
-    }, 800);
+    }, 1000);
 
   } catch (error) {
     console.error("Authentication error:", error);
 
     showMessage(
       "authMessage",
-      error.message || "Authentication failed. Please try again."
-    );
-   } 
-  finally {
-  if (submitButton) {
-    submitButton.disabled = false;
-
-    submitButton.textContent =
-      authMode === "signup"
-        ? "Create Account"
-        : "Sign In";
-  }
-}
-/* ============================================
-   PART 3 - AUTH BUTTONS & SESSION
-============================================ */
-
-// Update authentication buttons
-function updateAuthButtons() {
-  const signinBtn = $("signinBtn");
-  const signupBtn = $("signupBtn");
-  const signoutBtn = $("signoutBtn");
-  const authStatus = $("authStatus");
-
-  const loggedIn = Boolean(currentUser);
-
-  if (signinBtn) signinBtn.style.display = loggedIn ? "none" : "";
-
-  if (signupBtn) signupBtn.style.display = loggedIn ? "none" : "";
-
-  if (signoutBtn) signoutBtn.style.display = loggedIn ? "" : "none";
-
-  if (authStatus) {
-    authStatus.textContent = loggedIn
-      ? `Signed in: ${currentUser.email || ""}`
-      : "Not signed in";
-  }
-}
-
-// Sign out
-async function signOut() {
-  try {
-    const { error } = await supabaseClient.auth.signOut();
-
-    if (error) throw error;
-
-    currentUser = null;
-
-    updateAuthButtons();
-
-    const profileForm = $("profileForm");
-
-    if (profileForm) {
-      profileForm.reset();
-    }
-
-    showToast("You have signed out.");
-
-  } catch (error) {
-    console.error("Sign out error:", error);
-    showToast(error.message || "Sign out failed.");
-  }
-}
-// Check current session
-async function checkSession() {
-  try {
-    const { data, error } = await supabaseClient.auth.getSession();
-
-    if (error) throw error;
-
-    currentUser = data.session?.user || null;
-
-    updateAuthButtons();
-
-    if (currentUser && typeof loadProfile === "function") {
-      await loadProfile();
-    }
-
-  } catch (error) {
-    console.error("Session error:", error);
-  }
-}
-
-// Listen for login/logout changes
-supabaseClient.auth.onAuthStateChange((event, session) => {
-  currentUser = session?.user || null;
-
-  updateAuthButtons();
-});
-/* ============================================
-   PART 4 - LOAD USER PROFILE
-============================================ */
-
-async function loadProfile() {
-  if (!currentUser) return;
-
-  try {
-    const { data, error } = await supabaseClient
-      .from("profiles")
-      .select("*")
-      .eq("id", currentUser.id)
-      .maybeSingle();
-
-    if (error) throw error;
-
-    if (!data) {
-      showMessage(
-        "profileMessage",
-        "Welcome! Please complete your profile.",
-        true
-      );
-      return;
-    }
-
-    // Fill profile form
-    const fields = {
-      fullName: data.full_name,
-      profession: data.profession,
-      division: data.division,
-      district: data.district,
-      upazila: data.upazila,
-      experience: data.experience,
-      bio: data.bio
-    };
-
-    Object.entries(fields).forEach(([id, value]) => {
-      const element = $(id);
-
-      if (element && value !== null && value !== undefined) {
-        element.value = value;
-      }
-    });
-
-    if ($("isPublic")) {
-      $("isPublic").checked = data.is_public ?? true;
-    }
-
-    if ($("isActive")) {
-      $("isActive").checked = data.is_active ?? true;
-    }
-
-    if ($("profilePhotoPreview") && data.avatar_url) {
-      $("profilePhotoPreview").src = data.avatar_url;
-      $("profilePhotoPreview").style.display = "block";
-    }
-
-    // Load saved mobile number
-    const { data: contact, error: contactError } = await supabaseClient
-      .from("profile_contacts")
-      .select("phone")
-      .eq("user_id", currentUser.id)
-      .maybeSingle();
-
-    if (contactError) throw contactError;
-
-    if ($("profileMobile") && contact) {
-      $("profileMobile").value = contact.phone || "";
-    }
-
-    showMessage(
-      "profileMessage",
-      "Profile loaded successfully.",
-      true
+      error.message || "Authentication সফল হয়নি।"
     );
 
-  } catch (error) {
-    console.error("Profile loading error:", error);
-
-    showMessage(
-      "profileMessage",
-      error.message || "Could not load profile."
-    );
+  } finally {
+    button.disabled = false;
+    button.textContent =
+      authMode === "signin" ? "সাইন ইন" : "নিবন্ধন করুন";
   }
 }
+
 /* ============================================
-   PART 5 - PROFILE PHOTO PREVIEW
+   AUTH BUTTONS AND SESSION
 ============================================ */
 
-function handlePhotoPreview() {
-  const photoInput = $("profilePhoto");
-  const preview = $("profilePhotoPreview");
+async function updateAuthButtons() {
+  const { data, error } = await supabaseClient.auth.getSession();
 
-  if (!photoInput || !preview) return;
+  if (error) console.error(error);
 
-  const file = photoInput.files?.[0];
+  currentUser = data.session?.user || null;
 
-  if (!file) {
-    selectedPhoto = null;
+  $("signinBtn")?.classList.toggle("hidden", !!currentUser);
+  $("signupBtn")?.classList.toggle("hidden", !!currentUser);
+  $("signoutBtn")?.classList.toggle("hidden", !currentUser);
+
+  $("profileForm")?.classList.toggle("hidden", !currentUser);
+  $("profileSignIn")?.classList.toggle("hidden", !!currentUser);
+
+  if (currentUser) {
+    await loadMyProfile();
+  }
+}
+
+async function handleSignOut() {
+  const { error } = await supabaseClient.auth.signOut();
+
+  if (error) {
+    showToast(error.message);
     return;
   }
+
+  currentUser = null;
+  selectedPhoto = null;
+
+  $("profileForm")?.reset();
+  $("profilePhotoPreview")?.classList.add("hidden");
+
+  await updateAuthButtons();
+  await loadProfiles();
+
+  showToast("সফলভাবে সাইন আউট হয়েছে।");
+}
+
+/* ============================================
+   LOAD MY PROFILE
+============================================ */
+
+async function loadMyProfile() {
+  if (!currentUser) return;
+
+  const { data, error } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", currentUser.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Profile loading error:", error);
+    return;
+  }
+
+  if (!data) return;
+
+  if ($("fullName")) $("fullName").value = data.full_name || "";
+  if ($("profession")) $("profession").value = data.profession || "";
+  if ($("division")) $("division").value = data.division || "";
+  if ($("district")) $("district").value = data.district || "";
+  if ($("upazila")) $("upazila").value = data.upazila || "";
+  if ($("experience")) $("experience").value = data.experience || "";
+  if ($("bio")) $("bio").value = data.bio || "";
+
+  if ($("isPublic")) {
+    $("isPublic").checked = data.is_public !== false;
+  }
+
+  // Active / Inactive status
+  if ($("isActive")) {
+    $("isActive").checked = data.is_active !== false;
+  }
+
+  const { data: contact, error: contactError } = await supabaseClient
+    .from("profile_contacts")
+    .select("phone")
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  if (contactError) console.error(contactError);
+
+  if (contact && $("profileMobile")) {
+    $("profileMobile").value = contact.phone || "";
+  }
+
+  if (data.avatar_url && $("profilePhotoPreview")) {
+    $("profilePhotoPreview").src = data.avatar_url;
+    $("profilePhotoPreview").classList.remove("hidden");
+  }
+}
+
+/* ============================================
+   PROFILE PHOTO PREVIEW
+============================================ */
+
+$("profilePhoto")?.addEventListener("change", event => {
+  const file = event.target.files[0];
+
+  if (!file) return;
 
   const allowedTypes = [
     "image/jpeg",
@@ -436,66 +402,88 @@ function handlePhotoPreview() {
   if (!allowedTypes.includes(file.type)) {
     showMessage(
       "profileMessage",
-      "Only JPG, PNG and WebP images are allowed."
+      "JPG, PNG অথবা WebP ছবি নির্বাচন করুন।"
     );
 
-    photoInput.value = "";
-    selectedPhoto = null;
+    event.target.value = "";
     return;
   }
 
-  const maxSize = 3 * 1024 * 1024;
-
-  if (file.size > maxSize) {
+  if (file.size > 3 * 1024 * 1024) {
     showMessage(
       "profileMessage",
-      "Image size must be less than 3 MB."
+      "ছবির সাইজ সর্বোচ্চ ৩ MB হতে পারবে।"
     );
 
-    photoInput.value = "";
-    selectedPhoto = null;
+    event.target.value = "";
     return;
   }
 
   selectedPhoto = file;
 
-  const imageURL = URL.createObjectURL(file);
+  const preview = $("profilePhotoPreview");
 
-  preview.src = imageURL;
-  preview.style.display = "block";
+  if (preview) {
+    if (preview.dataset.objectUrl) {
+      URL.revokeObjectURL(preview.dataset.objectUrl);
+    }
 
-  showMessage(
-    "profileMessage",
-    "Photo selected successfully.",
-    true
-  );
-}
+    const objectUrl = URL.createObjectURL(file);
+    preview.dataset.objectUrl = objectUrl;
+    preview.src = objectUrl;
+    preview.classList.remove("hidden");
+  }
+
+  showMessage("profileMessage", "");
+});
+
 /* ============================================
-   PART 6 - SAVE PROFILE
+   SAVE PROFILE
 ============================================ */
 
-async function saveProfile(event) {
+async function handleProfileSave(event) {
   event.preventDefault();
 
   if (!currentUser) {
-    showMessage(
-      "profileMessage",
-      "Please sign in before saving your profile."
-    );
-    openAuth("signin");
+    openAuthModal("signin");
     return;
   }
 
-  const saveButton = $("saveProfileBtn");
-  if (saveButton) {
-    saveButton.disabled = true;
-    saveButton.textContent = "Saving...";
+  const form = $("profileForm");
+  const button = form?.querySelector('button[type="submit"]');
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "সংরক্ষণ হচ্ছে...";
   }
 
   try {
-    let avatarURL = null;
+    const fullName = $("fullName").value.trim();
+    const profession = $("profession").value.trim();
+    const division = $("division").value.trim();
+    const district = $("district").value.trim();
+    const upazila = $("upazila").value.trim();
+    const phone = $("profileMobile").value.trim();
 
-    // Upload selected profile photo
+    if (!fullName || !profession) {
+      throw new Error("নাম ও পেশা অবশ্যই লিখুন।");
+    }
+
+    const location = [division, district, upazila]
+      .filter(Boolean)
+      .join(", ");
+
+    const { data: oldProfile, error: oldProfileError } =
+      await supabaseClient
+        .from("profiles")
+        .select("avatar_url")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+
+    if (oldProfileError) throw oldProfileError;
+
+    let avatarUrl = oldProfile?.avatar_url || null;
+
     if (selectedPhoto) {
       const extension = selectedPhoto.name
         .split(".")
@@ -516,38 +504,27 @@ async function saveProfile(event) {
 
       if (uploadError) throw uploadError;
 
-      const { data: publicURL } = supabaseClient
+      const { data: publicData } = supabaseClient
         .storage
         .from("profile-photos")
         .getPublicUrl(filePath);
 
-      avatarURL = publicURL.publicUrl;
-    } else {
-      const { data: oldProfile, error: oldProfileError } =
-        await supabaseClient
-          .from("profiles")
-          .select("avatar_url")
-          .eq("id", currentUser.id)
-          .maybeSingle();
-
-      if (oldProfileError) throw oldProfileError;
-
-      avatarURL = oldProfile?.avatar_url || null;
+      avatarUrl = publicData.publicUrl;
     }
 
-    // Profile information
     const profileData = {
       id: currentUser.id,
-      full_name: $("fullName")?.value.trim() || "",
-      profession: $("profession")?.value.trim() || "",
-      division: $("division")?.value.trim() || "",
-      district: $("district")?.value.trim() || "",
-      upazila: $("upazila")?.value.trim() || "",
-      experience: $("experience")?.value.trim() || "",
-      bio: $("bio")?.value.trim() || "",
+      full_name: fullName,
+      profession,
+      location,
+      division,
+      district,
+      upazila,
+      experience: $("experience").value.trim(),
+      bio: $("bio").value.trim(),
       is_public: $("isPublic")?.checked ?? true,
       is_active: $("isActive")?.checked ?? true,
-      avatar_url: avatarURL,
+      avatar_url: avatarUrl,
       updated_at: new Date().toISOString()
     };
 
@@ -557,280 +534,287 @@ async function saveProfile(event) {
 
     if (profileError) throw profileError;
 
-    // Save contact number separately
-    const phone = $("profileMobile")?.value.trim() || "";
-
     if (phone) {
       const { error: contactError } = await supabaseClient
         .from("profile_contacts")
         .upsert(
           {
             user_id: currentUser.id,
-            phone: phone
+            phone
           },
           { onConflict: "user_id" }
         );
 
       if (contactError) throw contactError;
-    } else {
-      const { error: deleteError } = await supabaseClient
-        .from("profile_contacts")
-        .delete()
-        .eq("user_id", currentUser.id);
-
-      if (deleteError) throw deleteError;
     }
 
     selectedPhoto = null;
 
-    if ($("profilePhoto")) {
-      $("profilePhoto").value = "";
-    }
-
     showMessage(
       "profileMessage",
-      "Profile saved successfully!",
+      "আপনার প্রোফাইল সফলভাবে সংরক্ষণ হয়েছে!",
       true
     );
 
-    showToast("Profile saved successfully!");
+    await loadProfiles();
+    showToast("প্রোফাইল সংরক্ষণ হয়েছে!");
 
   } catch (error) {
     console.error("Profile save error:", error);
 
     showMessage(
       "profileMessage",
-      error.message || "Could not save profile."
+      error.message || "প্রোফাইল সংরক্ষণ হয়নি।"
     );
 
   } finally {
-    if (saveButton) {
-      saveButton.disabled = false;
-      saveButton.textContent = "Save Profile";
+    if (button) {
+      button.disabled = false;
+      button.textContent = "প্রোফাইল সংরক্ষণ করুন";
     }
   }
 }
+
 /* ============================================
-   PART 7 - SEARCH PUBLIC PROFILES
+   SEARCH AND DISPLAY PROFILES
 ============================================ */
 
-async function searchProfiles(event) {
-  if (event) event.preventDefault();
+async function loadProfiles(searchTerm = "", locationTerm = "") {
+  const container = $("searchResults");
+  const count = $("resultCount");
 
-  const resultsContainer =
-    $("searchResults") || $("peopleGrid");
+  if (!container) return;
 
-  const resultCount = $("resultCount");
+  container.replaceChildren();
 
-  if (!resultsContainer) return;
-
-  resultsContainer.innerHTML = "<p>Searching...</p>";
-
-  const keyword = $("searchInput")?.value.trim() || "";
-  const location = $("locationInput")?.value.trim() || "";
+  const loading = document.createElement("div");
+  loading.className = "empty-state";
+  loading.textContent = "প্রোফাইল লোড হচ্ছে...";
+  container.appendChild(loading);
 
   try {
     let query = supabaseClient
       .from("profiles")
-      .select(`
-        id,
-        full_name,
-        profession,
-        location,
-        division,
-        district,
-        upazila,
-        experience,
-        bio,
-        avatar_url
-      `)
+      .select(
+        "id,full_name,profession,location,division,district,upazila,experience,bio,avatar_url,is_active"
+      )
       .eq("is_public", true)
-      .eq("is_active", true);
-
-    if (keyword && location) {
-  query = query
-    .or(`full_name.ilike.%${keyword}%,profession.ilike.%${keyword}%`)
-    .or(
-      `location.ilike.%${location}%,division.ilike.%${location}%,district.ilike.%${location}%,upazila.ilike.%${location}%`
-    );
-} else if (keyword) {
-  query = query.or(
-    `full_name.ilike.%${keyword}%,profession.ilike.%${keyword}%`
-  );
-} else if (location) {
-  query = query.or(
-    `location.ilike.%${location}%,division.ilike.%${location}%,district.ilike.%${location}%,upazila.ilike.%${location}%`
-  );
-}
-    const { data, error } = await query
       .order("updated_at", { ascending: false })
       .limit(50);
 
+    if (searchTerm) {
+      query = query.ilike("profession", `%${searchTerm}%`);
+    }
+
+    if (locationTerm) {
+      query = query.ilike("location", `%${locationTerm}%`);
+    }
+
+    // এখানে is_active দিয়ে কোনো filter দেওয়া হয়নি।
+    // তাই Active এবং Inactive উভয় প্রোফাইল দেখা যাবে।
+
+    const { data: profiles, error } = await query;
+
     if (error) throw error;
 
-    if (!data || data.length === 0) {
-      resultsContainer.innerHTML =
-        "<p>No public profiles found.</p>";
+    container.replaceChildren();
 
-      if (resultCount) resultCount.textContent = "0 profiles";
+    if (!profiles || profiles.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "empty-state";
+      empty.textContent = "কোনো প্রোফাইল পাওয়া যায়নি।";
+      container.appendChild(empty);
 
+      if (count) count.textContent = "০টি প্রোফাইল";
       return;
     }
 
-    // Fetch public contact numbers
-    const profileIds = data.map(profile => profile.id);
+    const ids = profiles.map(profile => profile.id);
+    let contacts = [];
 
-    const { data: contacts, error: contactError } =
+    const { data: contactData, error: contactError } =
       await supabaseClient
         .from("profile_contacts")
-        .select("user_id, phone")
-        .in("user_id", profileIds);
+        .select("user_id,phone")
+        .in("user_id", ids);
 
-    if (contactError) {
-      console.warn("Contact numbers unavailable:", contactError);
+    if (!contactError && contactData) {
+      contacts = contactData;
     }
 
     const contactMap = new Map(
-      (contacts || []).map(contact => [
-        contact.user_id,
-        contact.phone
-      ])
+      contacts.map(item => [item.user_id, item.phone])
     );
 
-    resultsContainer.innerHTML = data.map(profile => {
-      const phone = contactMap.get(profile.id) || "";
+    profiles.forEach(profile => {
+      const card = document.createElement("article");
+      card.className = "person-card";
 
-      const safeName = escapeHTML(profile.full_name || "Unnamed");
-      const safeProfession = escapeHTML(profile.profession || "");
-      const safeLocation = escapeHTML(
-        [
-          profile.upazila,
-          profile.district,
-          profile.division
-        ].filter(Boolean).join(", ")
+      const image = document.createElement("img");
+      image.className = "person-avatar";
+      image.alt = profile.full_name || "প্রোফাইল ছবি";
+
+      if (profile.avatar_url) {
+        image.src = profile.avatar_url;
+      } else {
+        image.style.display = "none";
+      }
+
+      image.onerror = () => {
+        image.style.display = "none";
+      };
+
+      const name = document.createElement("h3");
+      name.textContent = profile.full_name || "নাম দেওয়া হয়নি";
+
+      const profession = document.createElement("p");
+      profession.className = "person-profession";
+      profession.textContent = profile.profession || "";
+
+      // Profile Active / Inactive status
+      const status = document.createElement("p");
+
+      status.className = profile.is_active
+        ? "profile-status active"
+        : "profile-status inactive";
+
+      status.textContent = profile.is_active
+        ? "🟢 Active — কাজ নিচ্ছেন"
+        : "⚪ Inactive — আপাতত কাজ নিচ্ছেন না";
+
+      const location = document.createElement("p");
+      location.textContent = [
+        profile.division,
+        profile.district,
+        profile.upazila
+      ].filter(Boolean).join(", ");
+
+      const experience = document.createElement("p");
+      experience.textContent = profile.experience
+        ? `অভিজ্ঞতা: ${profile.experience}`
+        : "";
+
+      const bio = document.createElement("p");
+      bio.textContent = profile.bio || "";
+
+      card.append(
+        image,
+        name,
+        profession,
+        status,
+        location,
+        experience,
+        bio
       );
-      const safeExperience = escapeHTML(profile.experience || "");
-      const safeBio = escapeHTML(profile.bio || "");
-      const safePhone = escapeHTML(phone);
 
-      const photo = profile.avatar_url
-        ? `<img src="${escapeHTML(profile.avatar_url)}"
-                alt="${safeName}"
-                class="profile-card-photo">`
-        : `<div class="profile-card-photo profile-placeholder">
-             ${safeName.charAt(0)}
-           </div>`;
+      const phone = contactMap.get(profile.id);
 
-      return `
-        <article class="profile-card">
-          ${photo}
+      if (phone) {
+        const phoneText = document.createElement("p");
+        phoneText.textContent = `মোবাইল: ${phone}`;
+        card.appendChild(phoneText);
+      }
 
-          <div class="profile-card-content">
-            <h3>${safeName}</h3>
-            <p>${safeProfession}</p>
-            <p>${safeLocation}</p>
-            ${safeExperience
-              ? `<p>Experience: ${safeExperience}</p>`
-              : ""}
-            ${safeBio ? `<p>${safeBio}</p>` : ""}
+      if (currentUser && currentUser.id !== profile.id) {
+        const reportButton = document.createElement("button");
 
-            ${safePhone
-              ? `<a href="tel:${safePhone}">Call: ${safePhone}</a>`
-              : ""}
+        reportButton.type = "button";
+        reportButton.className = "btn btn-outline";
+        reportButton.textContent = "প্রোফাইল রিপোর্ট করুন";
 
-            ${currentUser && currentUser.id !== profile.id
-              ? `<button type="button"
-                         class="report-profile-btn"
-                         data-profile-id="${profile.id}">
-                   Report Profile
-                 </button>`
-              : ""}
-          </div>
-        </article>
-      `;
-    }).join("");
+        reportButton.addEventListener("click", () => {
+          $("reportedProfileId").value = profile.id;
+          $("report").scrollIntoView({ behavior: "smooth" });
 
-    if (resultCount) {
-      resultCount.textContent = `${data.length} profiles found`;
+          showMessage(
+            "reportMessage",
+            "রিপোর্টের কারণ নির্বাচন করুন।",
+            true
+          );
+        });
+
+        card.appendChild(reportButton);
+      }
+
+      container.appendChild(card);
+    });
+
+    if (count) {
+      count.textContent = `${profiles.length}টি প্রোফাইল`;
     }
 
   } catch (error) {
     console.error("Search error:", error);
 
-    resultsContainer.innerHTML =
-      "<p>Could not search profiles. Please try again.</p>";
+    container.replaceChildren();
+
+    const message = document.createElement("div");
+    message.className = "empty-state";
+    message.textContent =
+      "প্রোফাইল লোড করা যায়নি। পরে আবার চেষ্টা করুন।";
+
+    container.appendChild(message);
+
+    if (count) count.textContent = "লোড করা যায়নি";
   }
 }
 
-// Escape text before inserting it into HTML
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, character => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[character]);
-}
 /* ============================================
-   PART 8 - PROFILE REPORT SYSTEM
+   SEARCH FORM
 ============================================ */
 
-// Open report form
-function openReport(profileId) {
-  if (!currentUser) {
-    showToast("Please sign in to report a profile.");
-    openAuth("signin");
-    return;
-  }
+async function handleSearch(event) {
+  event.preventDefault();
 
-  const reportForm = $("reportForm");
+  const searchTerm = $("searchInput").value.trim();
+  const locationTerm = $("locationInput").value.trim();
 
-  if (!reportForm) {
-    showToast("Report form not found.");
-    return;
-  }
+  $("people")?.scrollIntoView({ behavior: "smooth" });
 
-  if ($("reportedProfileId")) {
-    $("reportedProfileId").value = profileId;
-  }
-
-  showMessage("reportMessage", "");
-
-  reportForm.style.display = "block";
-
-  reportForm.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
+  await loadProfiles(searchTerm, locationTerm);
 }
 
-// Submit report
-async function submitReport(event) {
+/* ============================================
+   PROFILE REPORT
+============================================ */
+
+async function handleReport(event) {
   event.preventDefault();
 
   if (!currentUser) {
-    showToast("Please sign in first.");
-    openAuth("signin");
+    openAuthModal("signin");
+
+    showMessage(
+      "reportMessage",
+      "রিপোর্ট করতে আগে সাইন ইন করুন।"
+    );
+
     return;
   }
 
-  const reportedProfileId = $("reportedProfileId")?.value;
-  const reason = $("reportReason")?.value;
-  const details = $("reportDetails")?.value.trim() || "";
+  const reportedId = $("reportedProfileId").value;
+  const reason = $("reportReason").value;
 
-  if (!reportedProfileId || !reason) {
+  if (!reportedId) {
     showMessage(
       "reportMessage",
-      "Please select a reason for reporting."
+      "আগে একটি প্রোফাইল থেকে রিপোর্ট নির্বাচন করুন।"
     );
     return;
   }
 
-  if (reportedProfileId === currentUser.id) {
+  if (reportedId === currentUser.id) {
     showMessage(
       "reportMessage",
-      "You cannot report your own profile."
+      "নিজের প্রোফাইল রিপোর্ট করা যাবে না।"
+    );
+    return;
+  }
+
+  if (!reason) {
+    showMessage(
+      "reportMessage",
+      "রিপোর্টের কারণ নির্বাচন করুন।"
     );
     return;
   }
@@ -840,134 +824,152 @@ async function submitReport(event) {
       .from("profile_reports")
       .insert({
         reporter_id: currentUser.id,
-        reported_profile_id: reportedProfileId,
-        reason: reason,
-        details: details,
+        reported_profile_id: reportedId,
+        reason,
         status: "pending"
       });
 
     if (error) throw error;
 
+    $("reportForm").reset();
+    $("reportedProfileId").value = "";
+
     showMessage(
       "reportMessage",
-      "Report submitted successfully. Thank you!",
+      "আপনার রিপোর্ট পাঠানো হয়েছে।",
       true
     );
-
-    $("reportForm")?.reset();
-
-    setTimeout(() => {
-      if ($("reportForm")) {
-        $("reportForm").style.display = "none";
-      }
-    }, 1500);
 
   } catch (error) {
     console.error("Report error:", error);
 
     showMessage(
       "reportMessage",
-      error.message || "Could not submit report."
+      error.message || "রিপোর্ট পাঠানো যায়নি।"
     );
   }
 }
 
-// Handle report buttons in search results
-document.addEventListener("click", event => {
-  const button = event.target.closest(".report-profile-btn");
-
-  if (!button) return;
-
-  const profileId = button.dataset.profileId;
-
-  if (profileId) {
-    openReport(profileId);
-  }
-});
 /* ============================================
-   PART 9 - FINAL INITIALIZATION
+   CATEGORY BUTTONS
+============================================ */
+
+document.querySelectorAll("[data-category]").forEach(button => {
+  button.addEventListener("click", () => {
+    $("searchInput").value = button.dataset.category || "";
+    $("locationInput").value = "";
+
+    $("people")?.scrollIntoView({ behavior: "smooth" });
+
+    loadProfiles(button.dataset.category || "", "");
+  });
+});
+
+/* ============================================
+   NAVIGATION
+============================================ */
+
+$("menuToggle")?.addEventListener("click", () => {
+  $("mainNav")?.classList.toggle("open");
+});
+
+document.querySelectorAll("#mainNav a").forEach(link => {
+  link.addEventListener("click", () => {
+    $("mainNav")?.classList.remove("open");
+  });
+});
+
+$("navSearch")?.addEventListener("click", () => {
+  $("searchForm")?.scrollIntoView({ behavior: "smooth" });
+  $("searchInput")?.focus();
+});
+
+/* ============================================
+   INITIALIZE WEBSITE
 ============================================ */
 
 function initializeBondhon() {
+  console.log("Bondhon starting...");
 
-  // Login button
+  initializeAuthPhoneInput();
+
   $("signinBtn")?.addEventListener("click", () => {
-    openAuth("signin");
+    openAuthModal("signin");
+  });
+
+  $("signupBtn")?.addEventListener("click", () => {
+    openAuthModal("signup");
   });
 
   $("profileSignIn")?.addEventListener("click", () => {
-    openAuth("signin");
-  });
-
-  // Signup button
-  $("signupBtn")?.addEventListener("click", () => {
-    openAuth("signup");
+    openAuthModal("signin");
   });
 
   $("joinBtn")?.addEventListener("click", () => {
-    openAuth("signup");
+    openAuthModal("signup");
   });
 
-  // Logout
-  $("signoutBtn")?.addEventListener("click", signOut);
+  $("closeAuth")?.addEventListener("click", closeAuthModal);
 
-  // Authentication form
-  $("authForm")?.addEventListener("submit", handleAuthSubmit);
-
-  // Switch login/signup
-  $("switchAuth")?.addEventListener("click", switchAuthMode);
-
-  // Close authentication modal
-  $("closeAuth")?.addEventListener("click", closeAuth);
-
-  // Profile form
-  $("profileForm")?.addEventListener("submit", saveProfile);
-
-  // Photo preview
-  $("profilePhoto")?.addEventListener("change", handlePhotoPreview);
-
-  // Search form
-  $("searchForm")?.addEventListener("submit", searchProfiles);
-
-  // Report form
-  $("reportForm")?.addEventListener("submit", submitReport);
-
-  // Mobile navigation
-  $("menuToggle")?.addEventListener("click", () => {
-    $("mainNav")?.classList.toggle("active");
+  $("switchAuth")?.addEventListener("click", () => {
+    authMode = authMode === "signin" ? "signup" : "signin";
+    updateAuthUI();
   });
 
-  // Close navigation after clicking a link
-  $("mainNav")?.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", () => {
-      $("mainNav")?.classList.remove("active");
-    });
+  $("authForm")?.addEventListener(
+    "submit",
+    handleAuthentication
+  );
+
+  $("profileForm")?.addEventListener(
+    "submit",
+    handleProfileSave
+  );
+
+  $("searchForm")?.addEventListener(
+    "submit",
+    handleSearch
+  );
+
+  $("reportForm")?.addEventListener(
+    "submit",
+    handleReport
+  );
+
+  $("signoutBtn")?.addEventListener(
+    "click",
+    handleSignOut
+  );
+
+  $("authModal")?.addEventListener("click", event => {
+    if (event.target === $("authModal")) {
+      closeAuthModal();
+    }
   });
 
-  // Search navigation
-  $("navSearch")?.addEventListener("click", () => {
-    $("searchInput")?.focus();
-
-    $("searchForm")?.scrollIntoView({
-      behavior: "smooth"
-    });
-  });
-
-  // Current year
   if ($("year")) {
     $("year").textContent = new Date().getFullYear();
   }
 
-  // Authentication session
-  checkSession();
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    currentUser = session?.user || null;
 
-  // Initial authentication interface
+    setTimeout(() => {
+      updateAuthButtons();
+
+      loadProfiles(
+        $("searchInput")?.value.trim() || "",
+        $("locationInput")?.value.trim() || ""
+      );
+    }, 0);
+  });
+
   updateAuthButtons();
+  loadProfiles();
 
-  console.log("Bondhon website initialized successfully.");
+  console.log("Bondhon is ready!");
 }
 
-// Start website after HTML loads
 if (document.readyState === "loading") {
   document.addEventListener(
     "DOMContentLoaded",
