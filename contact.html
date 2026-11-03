@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Contact Us - Bondhon</title>
+  <meta name="description" content="Bondhon-এর সঙ্গে যোগাযোগ করুন। যেকোনো প্রশ্ন, পরামর্শ বা অভিযোগ আমাদের জানান।">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Hind Siliguri', sans-serif;
+      background: #f5f8fc;
+      color: #263445;
+      line-height: 1.8;
+    }
+
+    header {
+      background: white;
+      padding: 16px 7%;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      color: #1677d2;
+      font-size: 28px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    nav a {
+      color: #263445;
+      text-decoration: none;
+      margin-left: 18px;
+    }
+
+    nav a:hover {
+      color: #1677d2;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 45px auto;
+      padding: 0 20px;
+    }
+
+    .content {
+      background: white;
+      padding: 35px;
+      border-radius: 16px;
+      box-shadow: 0 5px 25px rgba(0,0,0,.05);
+    }
+
+    h1 {
+      color: #1677d2;
+      font-size: 34px;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      color: #1677d2;
+      margin: 25px 0 8px;
+      font-size: 22px;
+    }
+
+    .contact-card {
+      background: #edf6ff;
+      border-radius: 12px;
+      padding: 22px;
+      margin-top: 25px;
+    }
+
+    .email {
+      display: inline-block;
+      color: #1677d2;
+      font-weight: 700;
+      font-size: 19px;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    .email:hover {
+      text-decoration: underline;
+    }
+
+    .home-btn {
+      display: inline-block;
+      background: #1677d2;
+      color: white;
+      padding: 10px 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-top: 25px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #667085;
+    }
+
+    @media(max-width: 600px) {
+      header {
+        padding: 14px 5%;
+      }
+
+      nav a {
+        margin-left: 9px;
+      }
+
+      .content {
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html" class="logo">🤝 Bondhon</a>
+
+  <nav>
+    <a href="index.html">হোম</a>
+    <a href="about.html">আমাদের সম্পর্কে</a>
+    <a href="contact.html">যোগাযোগ</a>
+  </nav>
+</header>
+
+<main class="container">
+  <section class="content">
+
+    <h1>যোগাযোগ করুন</h1>
+
+    <p>
+      Bondhon সম্পর্কে আপনার কোনো প্রশ্ন, পরামর্শ,
+      অভিযোগ অথবা সহযোগিতার প্রয়োজন হলে আমাদের
+      সঙ্গে যোগাযোগ করুন।
+    </p>
+
+    <div class="contact-card">
+      <h2>ইমেইলের মাধ্যমে যোগাযোগ</h2>
+
+      <p>
+        নিচের ইমেইল ঠিকানায় আমাদের মেসেজ পাঠাতে পারেন:
+      </p>
+
+      <a class="email"
+         href="mailto:hello.bondhon@outlook.com">
+        hello.bondhon@outlook.com
+      </a>
+    </div>
+
+    <h2>কী বিষয়ে যোগাযোগ করতে পারবেন?</h2>
+
+    <ul>
+      <li>অ্যাকাউন্ট বা লগইন সমস্যা।</li>
+      <li>প্রোফাইল সংক্রান্ত সমস্যা।</li>
+      <li>ভুল বা সন্দেহজনক প্রোফাইল রিপোর্ট।</li>
+      <li>ওয়েবসাইট সম্পর্কে পরামর্শ।</li>
+      <li>ব্যবসায়িক সহযোগিতা ও অন্যান্য প্রশ্ন।</li>
+    </ul>
+
+    <h2>আমাদের ওয়েবসাইট</h2>
+
+    <p>
+      <a href="https://bondhonwebsite.netlify.app/">
+        https://bondhonwebsite.netlify.app/
+      </a>
+    </p>
+
+    <a href="index.html" class="home-btn">
+      হোম পেজে ফিরে যান
+    </a>
+
+  </section>
+</main>
+
+<footer>
+  © <span id="year"></span> Bondhon. সর্বস্বত্ব সংরক্ষিত।
+</footer>
+
+<script>
+  document.getElementById("year").textContent =
+    new Date().getFullYear();
+</script>
+
+</body>
+</html>
