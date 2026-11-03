@@ -1,120 +1,468 @@
+
 <!doctype html>
 <html lang="bn">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <meta name="description" content="Bondhon-এ আপনার প্রয়োজনীয় পেশাজীবী, কর্মী ও ব্যবসা খুঁজুন।">
+
   <title>Bondhon — আপনার প্রয়োজনীয় মানুষ খুঁজুন</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
   <link rel="stylesheet" href="style.css">
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js" defer></script>
+
   <link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css"
->
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css"
+  >
 </head>
+
 <body>
+
 <header class="site-header">
   <div class="nav-wrap">
+
     <a class="brand" href="#home" aria-label="Bondhon home">
-      <span class="brand-mark">🤝</span><span><strong>Bond<span>hon</span></strong><small>আপনার প্রয়োজনীয় মানুষ খুঁজুন</small></span>
+      <span class="brand-mark">🤝</span>
+      <span>
+        <strong>Bond<span>hon</span></strong>
+        <small>আপনার প্রয়োজনীয় মানুষ খুঁজুন</small>
+      </span>
     </a>
-    <button class="menu-toggle" id="menuToggle" aria-label="মেনু খুলুন">☰</button>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="মেনু খুলুন">
+      ☰
+    </button>
+
     <nav class="main-nav" id="mainNav">
-      <a class="active" href="#home">⌂ হোম</a><a href="#categories">▦ ক্যাটাগরি</a><a href="#people">♟ মানুষ</a><a href="#profile">＋ প্রোফাইল</a><a href="#about">ⓘ আমাদের সম্পর্কে</a>
+      <a class="active" href="#home">⌂ হোম</a>
+      <a href="#categories">▦ ক্যাটাগরি</a>
+      <a href="#people">♟ মানুষ</a>
+      <a href="#profile">＋ প্রোফাইল</a>
+      <a href="about.html">ⓘ আমাদের সম্পর্কে</a>
+      <a href="contact.html">✉ যোগাযোগ</a>
     </nav>
-    <div class="nav-actions"><button class="icon-btn" id="navSearch" aria-label="সার্চ">⌕</button><button class="btn btn-outline" id="signinBtn">সাইন ইন</button><button class="btn btn-primary" id="signupBtn">নিবন্ধন</button><button class="btn btn-outline hidden" id="signoutBtn">সাইন আউট</button></div>
+
+    <div class="nav-actions">
+      <button class="icon-btn" id="navSearch" aria-label="সার্চ">⌕</button>
+      <button class="btn btn-outline" id="signinBtn">সাইন ইন</button>
+      <button class="btn btn-primary" id="signupBtn">নিবন্ধন</button>
+      <button class="btn btn-outline hidden" id="signoutBtn">সাইন আউট</button>
+    </div>
+
   </div>
 </header>
 
 <main>
-<section class="hero" id="home">
-  <div class="hero-shade"></div>
-  <div class="hero-inner">
-    <div class="hero-copy">
-      <span class="eyebrow"><span>✦</span> আপনার কাজের বিশ্বস্ত ঠিকানা</span>
-      <h1>Bondhon — আপনার প্রয়োজনীয়<br><em>পেশাজীবী, কর্মী ও ব্যবসা খুঁজুন</em></h1>
-      <p>এখানে আপনি সহজেই আপনার প্রয়োজনীয় মানুষ খুঁজে পাবেন — পেশাজীবী, কর্মী বা ব্যবসা, সবকিছু এক জায়গায়।</p>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+
+    <div class="hero-shade"></div>
+
+    <div class="hero-inner">
+
+      <div class="hero-copy">
+        <span class="eyebrow">
+          <span>✦</span> আপনার কাজের বিশ্বস্ত ঠিকানা
+        </span>
+
+        <h1>
+          Bondhon — আপনার প্রয়োজনীয়<br>
+          <em>পেশাজীবী, কর্মী ও ব্যবসা খুঁজুন</em>
+        </h1>
+
+        <p>
+          এখানে আপনি সহজেই আপনার প্রয়োজনীয় মানুষ খুঁজে পাবেন —
+          পেশাজীবী, কর্মী বা ব্যবসা, সবকিছু এক জায়গায়।
+        </p>
+      </div>
+
+      <div class="hero-people" aria-label="বিভিন্ন পেশার মানুষ">
+        <div class="hero-person worker">👷</div>
+        <div class="hero-person doctor">👩‍⚕️</div>
+        <div class="hero-person business">👨‍💼</div>
+        <div class="hero-person teacher">👨‍🏫</div>
+
+        <div class="hero-note">
+          সঠিক মানুষ<br>
+          সঠিক কাজ<br>
+          সঠিক যোগাযোগ
+        </div>
+      </div>
+
     </div>
-    <div class="hero-people" aria-label="বিভিন্ন পেশার মানুষ">
-      <div class="hero-person worker">👷</div><div class="hero-person doctor">👩‍⚕️</div><div class="hero-person business">👨‍💼</div><div class="hero-person teacher">👨‍🏫</div>
-      <div class="hero-note">সঠিক মানুষ<br>সঠিক কাজ<br>সঠিক যোগাযোগ</div>
+
+    <form class="search-panel" id="searchForm">
+
+      <label class="search-field">
+        <span>♟</span>
+        <span class="field-content">
+          <small>কাকে খুঁজছেন?</small>
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="যেমন: শিক্ষক, ইলেকট্রিশিয়ান, ডাক্তার"
+          >
+        </span>
+      </label>
+
+      <label class="search-field">
+        <span>📍</span>
+        <span class="field-content">
+          <small>এলাকা বা শহর</small>
+          <input
+            id="locationInput"
+            type="search"
+            placeholder="যেমন: ঢাকা, রাজশাহী"
+          >
+        </span>
+      </label>
+
+      <button class="btn btn-search" type="submit">
+        ⌕ খুঁজুন <b>→</b>
+      </button>
+
+    </form>
+
+  </section>
+
+  <!-- TRUST SECTION -->
+  <section class="trust-strip" id="about">
+
+    <div class="trust-item">
+      <span class="trust-icon green">✓</span>
+      <div>
+        <b>নিরাপদ লগইন</b>
+        <small>আপনার তথ্য সুরক্ষিত রাখুন</small>
+      </div>
     </div>
-  </div>
-  <form class="search-panel" id="searchForm">
-    <label class="search-field"><span>♟</span><span class="field-content"><small>কাকে খুঁজছেন?</small><input id="searchInput" type="search" placeholder="যেমন: শিক্ষক, ইলেকট্রিশিয়ান, ডাক্তার"></span></label>
-    <label class="search-field"><span>📍</span><span class="field-content"><small>এলাকা বা শহর</small><input id="locationInput" type="search" placeholder="যেমন: ঢাকা, রাজশাহী"></span></label>
-    <button class="btn btn-search" type="submit">⌕ খুঁজুন <b>→</b></button>
-  </form>
-</section>
 
-<section class="trust-strip" id="about">
-  <div class="trust-item"><span class="trust-icon green">✓</span><div><b>নিরাপদ লগইন</b><small>আপনার তথ্য সুরক্ষিত রাখুন</small></div></div>
-  <div class="trust-item"><span class="trust-icon purple">♟</span><div><b>সহজে প্রোফাইল তৈরি</b><small>নিজের পেশা ও পরিচিতি তুলে ধরুন</small></div></div>
-  <div class="trust-item"><span class="trust-icon orange">⌕</span><div><b>পেশা ও এলাকা অনুসন্ধান</b><small>যার প্রয়োজন, সহজেই খুঁজে নিন</small></div></div>
-  <div class="trust-item"><span class="trust-icon pink">⚑</span><div><b>এড ও রিপোর্ট</b><small>প্রোফাইল সম্পর্কে রিপোর্ট করতে পারবেন</small></div></div>
-</section>
-
-<section class="section" id="categories">
-  <div class="section-heading"><div><span class="section-kicker">আপনার প্রয়োজন অনুযায়ী</span><h2>জনপ্রিয় ক্যাটাগরি</h2><p>পেশা নির্বাচন করে দ্রুত মানুষ খুঁজুন</p></div><a class="text-link" href="#people">সব ক্যাটাগরি দেখুন →</a></div>
-  <div class="category-grid">
-    <button class="category cat-blue" data-category="চিকিৎসা"><span>🩺</span><b>চিকিৎসা</b><small>ডাক্তার, নার্স, ফার্মাসিস্ট</small></button>
-    <button class="category cat-purple" data-category="শিক্ষা"><span>🎓</span><b>শিক্ষা</b><small>শিক্ষক, কোচিং, ট্রেইনার</small></button>
-    <button class="category cat-green" data-category="ইলেকট্রিক"><span>🛠️</span><b>ইলেকট্রিক / টেকনিক্যাল</b><small>ইলেকট্রিশিয়ান, মেকানিক</small></button>
-    <button class="category cat-pink" data-category="আইটি"><span>💻</span><b>আইটি ও ডিজিটাল</b><small>ডিজাইনার, ডেভেলপার</small></button>
-    <button class="category cat-orange" data-category="ব্যবসা"><span>💼</span><b>ব্যবসা / প্রতিষ্ঠান</b><small>দোকান, সার্ভিস, কোম্পানি</small></button>
-    <button class="category cat-sky" data-category="কর্মী"><span>👷</span><b>কর্মী / শ্রমিক</b><small>ড্রাইভার, সহকারী, কারিগর</small></button>
-    <button class="category cat-yellow" data-category="নির্মাণ"><span>🏠</span><b>বাড়ি ও নির্মাণ</b><small>মিস্ত্রি, রাজমিস্ত্রি</small></button>
-    <button class="category cat-gray" data-category=""><span>•••</span><b>অন্যান্য</b><small>বিভিন্ন পেশা ও সেবা</small></button>
-  </div>
-</section>
-
-<section class="section people-section" id="people">
-  <div class="section-heading"><div><span class="section-kicker">Bondhon কমিউনিটি</span><h2>নির্বাচিত প্রোফাইল</h2><p>নতুন যুক্ত হওয়া পেশাজীবী ও ব্যবসার প্রোফাইল</p></div><span class="result-count" id="resultCount">প্রোফাইল লোড হচ্ছে...</span></div>
-  <div class="ad-slot"><span>বিজ্ঞাপনের স্থান</span><small>আপনার বিজ্ঞাপন এখানে প্রদর্শিত হতে পারে</small></div>
-  <div class="people-grid" id="searchResults"><div class="empty-state">প্রোফাইল লোড হচ্ছে...</div></div>
-</section>
-
-<section class="section profile-section" id="profile">
-  <div class="profile-intro"><span class="section-kicker">Bondhon-এ যুক্ত হোন</span><h2>আপনার পরিচিতি সবার কাছে পৌঁছে দিন</h2><p>একটি প্রোফাইল তৈরি করুন, আপনার দক্ষতা ও যোগাযোগের তথ্য যোগ করুন।</p><button class="btn btn-primary" id="profileSignIn">প্রোফাইল তৈরি করুন →</button></div>
-  <form class="profile-form hidden" id="profileForm">
-    <h3>আপনার প্রোফাইল</h3>
-    <div class="form-grid">
-      <label>আপনার নাম<input id="fullName" required maxlength="100" placeholder="সম্পূর্ণ নাম"></label>
-      <label>পেশা / ব্যবসা<input id="profession" required maxlength="120" placeholder="যেমন: ইলেকট্রিশিয়ান"></label>
-      <label>বিভাগ<input id="division" placeholder="যেমন: রাজশাহী"></label>
-      <label>জেলা<input id="district" placeholder="যেমন: রাজশাহী"></label>
-      <label>উপজেলা / এলাকা<input id="upazila" placeholder="যেমন: পবা"></label>
-      <label>মোবাইল নম্বর<input id="profileMobile" type="tel" inputmode="tel" placeholder="+8801XXXXXXXXX"></label>
-      <label>অভিজ্ঞতা<input id="experience" placeholder="যেমন: ৫ বছর"></label>
-      <label>প্রোফাইল ছবি<input id="profilePhoto" type="file" accept="image/png,image/jpeg,image/webp"></label>
-      <label class="full">নিজের সম্পর্কে<textarea id="bio" rows="4" maxlength="1000" placeholder="আপনার কাজ, দক্ষতা ও অভিজ্ঞতা সম্পর্কে লিখুন"></textarea></label>
+    <div class="trust-item">
+      <span class="trust-icon purple">♟</span>
+      <div>
+        <b>সহজে প্রোফাইল তৈরি</b>
+        <small>নিজের পেশা ও পরিচিতি তুলে ধরুন</small>
+      </div>
     </div>
-    <div class="photo-preview-wrap"><img id="profilePhotoPreview" alt="ছবির প্রিভিউ" class="photo-preview hidden"></div>
-    <label class="check-line"><input type="checkbox" id="isPublic" checked> আমার প্রোফাইল সবাই দেখতে পারবে</label><label class="check-line">
-  <input type="checkbox" id="isActive" checked>
-  আমি বর্তমানে কাজ নিচ্ছি (Active)
-</label>
-    <button class="btn btn-primary" type="submit">প্রোফাইল সংরক্ষণ করুন</button><p class="form-message" id="profileMessage" role="status"></p>
-  </form>
-</section>
 
-<section class="report-section section" id="report">
-  <div><span class="section-kicker">কমিউনিটির নিরাপত্তা</span><h2>সন্দেহজনক প্রোফাইল রিপোর্ট করুন</h2><p>ভুয়া বা ভুল তথ্যযুক্ত প্রোফাইল দেখলে আমাদের জানান।</p></div>
-  <form id="reportForm" class="report-form"><input id="reportedProfileId" type="hidden"><select id="reportReason" required><option value="">রিপোর্টের কারণ নির্বাচন করুন</option><option value="fake_profile">ভুয়া প্রোফাইল</option><option value="scam">প্রতারণা / স্ক্যাম</option><option value="wrong_information">ভুল তথ্য</option><option value="harassment">হয়রানি</option><option value="other">অন্যান্য</option></select><button class="btn btn-outline" type="submit">রিপোর্ট পাঠান</button><p class="form-message" id="reportMessage" role="status"></p></form>
-</section>
+    <div class="trust-item">
+      <span class="trust-icon orange">⌕</span>
+      <div>
+        <b>পেশা ও এলাকা অনুসন্ধান</b>
+        <small>যার প্রয়োজন, সহজেই খুঁজে নিন</small>
+      </div>
+    </div>
 
-<section class="join-banner"><div class="join-symbol">🤝</div><div><span>আজই Bondhon-এ যুক্ত হোন!</span><h2>আপনার দক্ষতা ও কাজের পরিচয় পৌঁছে দিন সবার কাছে</h2><p>নতুন মানুষের সঙ্গে পরিচিত হোন, কাজের সুযোগ তৈরি করুন।</p></div><button class="btn btn-light" id="joinBtn">এখনই শুরু করুন →</button></section>
+    <div class="trust-item">
+      <span class="trust-icon pink">⚑</span>
+      <div>
+        <b>এড ও রিপোর্ট</b>
+        <small>প্রোফাইল সম্পর্কে রিপোর্ট করতে পারবেন</small>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- CATEGORY SECTION -->
+  <section class="section" id="categories">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-kicker">আপনার প্রয়োজন অনুযায়ী</span>
+        <h2>জনপ্রিয় ক্যাটাগরি</h2>
+        <p>পেশা নির্বাচন করে দ্রুত মানুষ খুঁজুন</p>
+      </div>
+
+      <a class="text-link" href="#people">সব ক্যাটাগরি দেখুন →</a>
+    </div>
+
+    <div class="category-grid">
+
+      <button class="category cat-blue" data-category="চিকিৎসা">
+        <span>🩺</span>
+        <b>চিকিৎসা</b>
+        <small>ডাক্তার, নার্স, ফার্মাসিস্ট</small>
+      </button>
+
+      <button class="category cat-purple" data-category="শিক্ষা">
+        <span>🎓</span>
+        <b>শিক্ষা</b>
+        <small>শিক্ষক, কোচিং, ট্রেইনার</small>
+      </button>
+
+      <button class="category cat-green" data-category="ইলেকট্রিক">
+        <span>🛠️</span>
+        <b>ইলেকট্রিক / টেকনিক্যাল</b>
+        <small>ইলেকট্রিশিয়ান, মেকানিক</small>
+      </button>
+
+      <button class="category cat-pink" data-category="আইটি">
+        <span>💻</span>
+        <b>আইটি ও ডিজিটাল</b>
+        <small>ডিজাইনার, ডেভেলপার</small>
+      </button>
+
+      <button class="category cat-orange" data-category="ব্যবসা">
+        <span>💼</span>
+        <b>ব্যবসা / প্রতিষ্ঠান</b>
+        <small>দোকান, সার্ভিস, কোম্পানি</small>
+      </button>
+
+      <button class="category cat-sky" data-category="কর্মী">
+        <span>👷</span>
+        <b>কর্মী / শ্রমিক</b>
+        <small>ড্রাইভার, সহকারী, কারিগর</small>
+      </button>
+
+      <button class="category cat-yellow" data-category="নির্মাণ">
+        <span>🏠</span>
+        <b>বাড়ি ও নির্মাণ</b>
+        <small>মিস্ত্রি, রাজমিস্ত্রি</small>
+      </button>
+
+      <button class="category cat-gray" data-category="">
+        <span>•••</span>
+        <b>অন্যান্য</b>
+        <small>বিভিন্ন পেশা ও সেবা</small>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- PEOPLE SECTION -->
+  <section class="section people-section" id="people">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-kicker">Bondhon কমিউনিটি</span>
+        <h2>নির্বাচিত প্রোফাইল</h2>
+        <p>নতুন যুক্ত হওয়া পেশাজীবী ও ব্যবসার প্রোফাইল</p>
+      </div>
+
+      <span class="result-count" id="resultCount">
+        প্রোফাইল লোড হচ্ছে...
+      </span>
+    </div>
+
+    <div class="ad-slot">
+      <span>বিজ্ঞাপনের স্থান</span>
+      <small>আপনার বিজ্ঞাপন এখানে প্রদর্শিত হতে পারে</small>
+    </div>
+
+    <div class="people-grid" id="searchResults">
+      <div class="empty-state">প্রোফাইল লোড হচ্ছে...</div>
+    </div>
+
+  </section>
+
+  <!-- PROFILE SECTION -->
+  <section class="section profile-section" id="profile">
+
+    <div class="profile-intro">
+      <span class="section-kicker">Bondhon-এ যুক্ত হোন</span>
+      <h2>আপনার পরিচিতি সবার কাছে পৌঁছে দিন</h2>
+      <p>একটি প্রোফাইল তৈরি করুন, আপনার দক্ষতা ও যোগাযোগের তথ্য যোগ করুন।</p>
+      <button class="btn btn-primary" id="profileSignIn">
+        প্রোফাইল তৈরি করুন →
+      </button>
+    </div>
+
+    <form class="profile-form hidden" id="profileForm">
+
+      <h3>আপনার প্রোফাইল</h3>
+
+      <div class="form-grid">
+
+        <label>
+          আপনার নাম
+          <input id="fullName" required maxlength="100" placeholder="সম্পূর্ণ নাম">
+        </label>
+
+        <label>
+          পেশা / ব্যবসা
+          <input id="profession" required maxlength="120" placeholder="যেমন: ইলেকট্রিশিয়ান">
+        </label>
+
+        <label>
+          বিভাগ
+          <input id="division" placeholder="যেমন: রাজশাহী">
+        </label>
+
+        <label>
+          জেলা
+          <input id="district" placeholder="যেমন: রাজশাহী">
+        </label>
+
+        <label>
+          উপজেলা / এলাকা
+          <input id="upazila" placeholder="যেমন: পবা">
+        </label>
+
+        <label>
+          মোবাইল নম্বর
+          <input
+            id="profileMobile"
+            type="tel"
+            inputmode="tel"
+            placeholder="+8801XXXXXXXXX"
+          >
+        </label>
+
+        <label>
+          অভিজ্ঞতা
+          <input id="experience" placeholder="যেমন: ৫ বছর">
+        </label>
+
+        <label>
+          প্রোফাইল ছবি
+          <input
+            id="profilePhoto"
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+          >
+        </label>
+
+        <label class="full">
+          নিজের সম্পর্কে
+          <textarea
+            id="bio"
+            rows="4"
+            maxlength="1000"
+            placeholder="আপনার কাজ, দক্ষতা ও অভিজ্ঞতা সম্পর্কে লিখুন"
+          ></textarea>
+        </label>
+
+      </div>
+
+      <div class="photo-preview-wrap">
+        <img
+          id="profilePhotoPreview"
+          alt="ছবির প্রিভিউ"
+          class="photo-preview hidden"
+        >
+      </div>
+
+      <label class="check-line">
+        <input type="checkbox" id="isPublic" checked>
+        আমার প্রোফাইল সবাই দেখতে পারবে
+      </label>
+
+      <label class="check-line">
+        <input type="checkbox" id="isActive" checked>
+        আমি বর্তমানে কাজ নিচ্ছি (Active)
+      </label>
+
+      <button class="btn btn-primary" type="submit">
+        প্রোফাইল সংরক্ষণ করুন
+      </button>
+
+      <p class="form-message" id="profileMessage" role="status"></p>
+
+    </form>
+
+  </section>
+
+  <!-- REPORT SECTION -->
+  <section class="report-section section" id="report">
+
+    <div>
+      <span class="section-kicker">কমিউনিটির নিরাপত্তা</span>
+      <h2>সন্দেহজনক প্রোফাইল রিপোর্ট করুন</h2>
+      <p>ভুয়া বা ভুল তথ্যযুক্ত প্রোফাইল দেখলে আমাদের জানান।</p>
+    </div>
+
+    <form id="reportForm" class="report-form">
+
+      <input id="reportedProfileId" type="hidden">
+
+      <select id="reportReason" required>
+        <option value="">রিপোর্টের কারণ নির্বাচন করুন</option>
+        <option value="fake_profile">ভুয়া প্রোফাইল</option>
+        <option value="scam">প্রতারণা / স্ক্যাম</option>
+        <option value="wrong_information">ভুল তথ্য</option>
+        <option value="harassment">হয়রানি</option>
+        <option value="other">অন্যান্য</option>
+      </select>
+
+      <button class="btn btn-outline" type="submit">
+        রিপোর্ট পাঠান
+      </button>
+
+      <p class="form-message" id="reportMessage" role="status"></p>
+
+    </form>
+
+  </section>
+
+  <!-- JOIN BANNER -->
+  <section class="join-banner">
+
+    <div class="join-symbol">🤝</div>
+
+    <div>
+      <span>আজই Bondhon-এ যুক্ত হোন!</span>
+      <h2>আপনার দক্ষতা ও কাজের পরিচয় পৌঁছে দিন সবার কাছে</h2>
+      <p>নতুন মানুষের সঙ্গে পরিচিত হোন, কাজের সুযোগ তৈরি করুন।</p>
+    </div>
+
+    <button class="btn btn-light" id="joinBtn">
+      এখনই শুরু করুন →
+    </button>
+
+  </section>
+
 </main>
 
-<footer class="site-footer"><div class="footer-inner"><a class="brand footer-brand" href="#home"><span class="brand-mark">🤝</span><span><strong>Bondhon</strong><small>আপনার প্রয়োজনীয় মানুষ খুঁজুন</small></span></a><div class="footer-links"><a href="#home">হোম</a><a href="#people">মানুষ খুঁজুন</a><a href="#profile">প্রোফাইল</a><a href="#categories">ক্যাটাগরি</a><a href="#about">আমাদের সম্পর্কে</a></div><small>© <span id="year"></span> Bondhon. সর্বস্বত্ব সংরক্ষিত।</small></div></footer>
+<!-- FOOTER -->
+<footer class="site-footer">
 
+  <div class="footer-inner">
+
+    <a class="brand footer-brand" href="#home">
+      <span class="brand-mark">🤝</span>
+      <span>
+        <strong>Bondhon</strong>
+        <small>আপনার প্রয়োজনীয় মানুষ খুঁজুন</small>
+      </span>
+    </a>
+
+    <div class="footer-links">
+      <a href="#home">হোম</a>
+      <a href="#people">মানুষ খুঁজুন</a>
+      <a href="#profile">প্রোফাইল</a>
+      <a href="#categories">ক্যাটাগরি</a>
+      <a href="about.html">আমাদের সম্পর্কে</a>
+      <a href="contact.html">যোগাযোগ</a>
+    </div>
+
+    <small>
+      © <span id="year"></span> Bondhon. সর্বস্বত্ব সংরক্ষিত।
+    </small>
+
+  </div>
+
+</footer>
+
+<!-- AUTH MODAL -->
 <div class="modal hidden" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+
   <div class="modal-card">
-    <button class="modal-close" id="closeAuth" aria-label="বন্ধ করুন">×</button>
+
+    <button class="modal-close" id="closeAuth" aria-label="বন্ধ করুন">
+      ×
+    </button>
 
     <div class="modal-logo">🤝 Bondhon</div>
 
@@ -124,15 +472,15 @@
     <form id="authForm">
 
       <label>
-  ইমেইল অথবা মোবাইল নম্বর
-  <input
-    id="authEmail"
-    type="text"
-    required
-    autocomplete="username"
-    placeholder="ইমেইল অথবা মোবাইল নম্বর"
-  >
-</label>
+        ইমেইল অথবা মোবাইল নম্বর
+        <input
+          id="authEmail"
+          type="text"
+          required
+          autocomplete="username"
+          placeholder="ইমেইল অথবা মোবাইল নম্বর"
+        >
+      </label>
 
       <label>
         পাসওয়ার্ড
@@ -151,14 +499,20 @@
       </button>
 
       <p class="form-message" id="authMessage" role="status"></p>
+
     </form>
 
     <button class="switch-auth" id="switchAuth">
       নতুন অ্যাকাউন্ট তৈরি করুন
     </button>
+
   </div>
+
 </div>
+
 <div class="toast" id="toast" role="status"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
+
 </body>
 </html>
