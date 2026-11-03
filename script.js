@@ -23,7 +23,19 @@ const supabaseClient = window.supabase.createClient(
     }
   }
 );
+// Facebook Login
+document.getElementById("facebookLoginBtn")?.addEventListener("click", async () => {
+  const { data, error } = await supabaseClient.auth.signInWithOAuth({
+    provider: "facebook",
+    options: {
+      redirectTo: window.location.origin
+    }
+  });
 
+  if (error) {
+    alert("Facebook Login Error: " + error.message);
+  }
+});
 let currentUser = null;
 let authMode = "signin";
 let selectedPhoto = null;
